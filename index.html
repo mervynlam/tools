@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Water Mark</title>
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/vue@2"></script>
+  <script src="https://unpkg.com/element-ui@2.15.7/lib/index.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.7/lib/theme-chalk/index.css">
+</head>
+<body>
+  <div id="app">
+    <el-upload
+      class="upload-demo"
+      action=""
+      :show-file-list="false"
+      :accept="acceptFile"
+      :before-upload="beforeUpload"
+      multiple
+      drag
+      :limit="10"
+      :on-exceed="handleExceed">
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10张</div>
+    </el-upload>
+    <el-input type="range" v-model="range" :min="0" :max="10"></el-input>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        range:5,
+        imgList:[],
+        acceptFile:"png,jpg,jpeg"
+      },
+      methods: {
+        beforeUpload(file){
+          console.log(file)
+          let fileType = file.type
+          if (fileType != 'image/png' && fileType != 'image/jpeg'){
+            this.$message({type:'info',message:'仅支持png/jpg文件'})
+            return false
+          }
+          this.imgList.push(file)
+          return false
+        },
+        handleExceed(files, fileList) {
+          this.$message({type:'info',message:'最多上传10张图片'})
+        }
+      }
+    })
+  </script>
+</body>
+</html>
