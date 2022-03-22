@@ -44,16 +44,21 @@ let drawText = (index) => {
     fontCtx.fillStyle = color
     fontCtx.rotate(angle*Math.PI/180)
 
-
+    //文字宽度
     let textWidth = (fontCtx.measureText(text)).width
+    //横向间隔
     let margin = (fontCtx.measureText('一')).width
 
+    //由于可旋转角度，取宽高较大值乘一定数额，避免空白
     let maxWidth = Math.max(canvas.width, canvas.height)*1.3
+    //行数
     let row = Math.ceil(maxWidth / (textSize+textSize*space))
+    //列数
     let col = Math.ceil(maxWidth / (textWidth+margin))
 
     for (let i = -1*row; i < row; ++i) {
         for (let j = -1*col; j < col; ++j) {
+            //偏移量，隔行偏移
             let offset = 0
             if (i % 2 != 0) offset = (textWidth+margin)/2
             fontCtx.fillText(text, (textWidth+margin)*j - offset, (textSize+textSize*space) * i);

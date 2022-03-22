@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Add Water Mark</title>
+  <title>Watermark Pictures</title>
   <!-- 引入组件库 -->
   <script src="https://unpkg.com/vue@2"></script>
   <script src="https://unpkg.com/element-ui@2.15.7/lib/index.js"></script>
@@ -57,7 +57,7 @@
     </div>
     <div class="block">
       <span class="demonstration">间距</span>
-      <el-slider v-model="space" :min="0" :max="3" :step="0.05" @input="handleDrawText"></el-slider>
+      <el-slider v-model="space" :min="0" :max="5" :step="0.05" @input="handleDrawText"></el-slider>
     </div>
     <div class="block">
       <span class="demonstration">颜色</span>
@@ -81,11 +81,11 @@
         fileNum: 0,
         color:'rgba(249, 183, 38, 0.66)',
         text:'',
-        space:0.5,
+        space:2,
       },
       methods: {
+        //上传前钩子
         beforeUpload(file){
-          console.log(file)
           let fileType = file.type
           if (fileType != 'image/png' && fileType != 'image/jpeg'){
             this.$message({type:'info',message:'仅支持png/jpg文件'})
@@ -98,8 +98,8 @@
         handleExceed(files, fileList) {
           this.$message({type:'info',message:'最多上传10张图片'})
         },
+        //重画
         handleDrawText() {
-          console.log()
           redraw()
         },
         formatTooltip(val) {

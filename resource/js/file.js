@@ -13,6 +13,7 @@ let readFile = (file, index) => {
         img.onload = () => {
             imgMap.set(index, img)
             drawImg(index)
+            drawText(index)
         }
         return img.src = fileReader.result
     }
