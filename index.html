@@ -25,6 +25,7 @@
       <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10张</div>
     </el-upload>
     <el-input type="range" v-model="range" :min="0" :max="10"></el-input>
+    <canvas v-for="(img, index) in imgList" :id="'canvas'+index"></canvas>
   </div>
 
   <script>
