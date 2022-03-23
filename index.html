@@ -84,6 +84,15 @@
           </el-col>
         </el-row>
       </div>
+
+      <div class="button-group" v-if="fileIndex>0">
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-delete" @click="clearImgs">清空图片</el-button>
+          <el-button type="primary" icon="el-icon-refresh-right" @click="resetStyle">重置样式</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="batchDownload">批量下载</el-button>
+        </el-button-group>
+      </div>
+
       <template v-if="fileIndex>0">
         <el-row v-for="row in (fileIndex%2==0)?fileIndex/2:(fileIndex+1)/2" class="img-row" :gutter="30">
           <el-col :span="12" v-for="col in 2">
@@ -120,12 +129,12 @@
       data: {
         size: 25,
         angle: 45,
-        imgList: [],
-        acceptFile: "png,jpg,jpeg",
-        fileIndex: 0,
         color: 'rgba(249, 183, 38, 0.66)',
         text: '',
         space: 2,
+        acceptFile: "png,jpg,jpeg",
+        fileIndex: 0,
+        imgList: [],
         fileSet: new Set(),
         previewFlag:false,
         previewData:'',
@@ -180,6 +189,22 @@
         closePreview() {
           this.previewData = ''
           this.previewFlag = false
+        },
+        clearImgs() {
+          this.fileIndex = 0
+          this.imgList = []
+          this.fileSet.clear()
+          clearImgMap()
+          clearFileMap()
+        },
+        resetStyle() {
+          this.size = 25
+          this.angle = 45
+          this.color = 'rgba(249, 183, 38, 0.66)'
+          this.space = 2
+        },
+        batchDownload() {
+          batchDownloadImg()
         }
       },
     })

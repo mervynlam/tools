@@ -49,6 +49,13 @@
     line-height: 40px;
 }
 
+/* 按钮区 */
+.button-group{
+    text-align: center;
+    margin: 40px 0px;
+}
+
+/* 图片栅栏 */
 .img-row{
     margin: 10px 0px;
 }

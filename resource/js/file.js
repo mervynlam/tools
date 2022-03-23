@@ -46,6 +46,12 @@ let downloadImg = (index) => {
     }, 100)
 }
 
+let batchDownloadImg = () => {
+    fileMap.forEach((value, key) => {
+        downloadImg(key)
+    })
+}
+
 //文件名
 let generateFileName = (fileName) => {
     if (fileName.lastIndexOf(".")>0) {
@@ -59,4 +65,8 @@ let generateFileName = (fileName) => {
     let minute = ("0"+now.getMinutes()).slice(-2)
     let second = ("0"+now.getSeconds()).slice(-2)
     return fileName+"_watermark_"+year+month+day+hour+minute+second+".png"
+}
+
+let clearFileMap = () =>{
+    fileMap.clear()
 }

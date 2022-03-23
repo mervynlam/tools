@@ -84,3 +84,8 @@ let getImgData = (index) => {
     let imageData = canvas.toDataURL('image/png');
     return imageData
 }
+
+let clearImgMap = () =>{
+    canvasMap.clear()
+    imgMap.clear()
+}
