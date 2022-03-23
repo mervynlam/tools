@@ -84,18 +84,29 @@
           </el-col>
         </el-row>
       </div>
-      <div v-for="(img, index) in imgList" class="box-canvas">
-        <canvas :id="'canvas_'+index"></canvas>
-        <div class="shadow">
-          <i class="shadow-icon el-icon-search" @click="preview(index)"></i>
-          <i class="shadow-icon el-icon-download" @click="download(index)"></i>
-        </div>
-      </div>
+      <template v-if="fileIndex>0">
+        <el-row v-for="row in (fileIndex%2==0)?fileIndex/2:(fileIndex+1)/2" class="img-row" :gutter="30">
+          <el-col :span="12" v-for="col in 2">
+            <div class="box-canvas" v-if="((row-1)*2+(col-1))<fileIndex">
+              <canvas :id="'canvas_'+((row-1)*2+(col-1))"></canvas>
+              <div class="shadow">
+                <i class="shadow-icon el-icon-search" @click="preview((row-1)*2+(col-1))"></i>
+                <i class="shadow-icon el-icon-download" @click="download((row-1)*2+(col-1))"></i>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </template>
     </el-card>
+
 
     <div class="preview-img" v-if="previewFlag">
       <i class="close-icon el-icon-circle-close" @click="closePreview()"></i>
-      <el-image :src="previewData" :fit="fit"></el-image>
+      <el-image v-if="previewData" :src="previewData">
+        <div slot="placeholder" class="placeholder-slot">
+          <i class="el-icon-loading"></i>
+        </div>
+      </el-image>
     </div>
 
     <div id="downloadLinks"></div>
@@ -170,7 +181,7 @@
           this.previewData = ''
           this.previewFlag = false
         }
-      }
+      },
     })
   </script>
 </body>
