@@ -65,6 +65,6 @@ let generateFileName = (fileName) => {
     let hour = ("0"+now.getHours()).slice(-2)
     let minute = ("0"+now.getMinutes()).slice(-2)
     let second = ("0"+now.getSeconds()).slice(-2)
-    let milliseconds = ("00"+now.getMilliseconds).slice(-3)
+    let milliseconds = ("00"+now.getMilliseconds()).slice(-3)
     return fileName+"_watermark_"+year+month+day+hour+minute+second+milliseconds+".png"
 }

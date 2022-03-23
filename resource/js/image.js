@@ -70,3 +70,10 @@ let getImgData = (index) => {
     let imageData = canvas.toDataURL('image/png');
     return imageData
 }
+
+//获取图片base64
+let getImgBase64 = (index) => {
+    let dataUrl = getImgData(index)
+    let idx = dataUrl.indexOf('base64,')
+    return dataUrl.substring(idx + 'base64,'.length)
+}
