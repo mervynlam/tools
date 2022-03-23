@@ -1,36 +1,21 @@
 "use strict";
 
-let canvasMap = new Map()
-let imgMap = new Map()
-
+//画图
 let drawImg = (index) => {
-    let canvas
-    if (canvasMap.has(index)) {
-        canvas = canvasMap.get(index)
-    } else {
-        canvas = document.getElementById("canvas_"+index)
-        canvasMap.set(index, canvas)
-    }
-    let img
-    if (imgMap.has(index)) {
-        img = imgMap.get(index)
-    } else {
-        return
-    }
+    let canvas = getCanvas(index)
+    let img = getImg(index)
+    if (!canvas || !img) return
+
     canvas.width = img.width
     canvas.height = img.height
     let ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0)
 }
 
+//加水印
 let drawText = (index) => {
-    let canvas
-    if (canvasMap.has(index)) {
-        canvas = canvasMap.get(index)
-    } else {
-        canvas = document.getElementById("canvas_"+index)
-        canvasMap.set(index, canvas)
-    }
+    let canvas = getCanvas(index)
+    if (!canvas) return 
 
     let color = app.color
     let angle = app.angle
@@ -66,9 +51,11 @@ let drawText = (index) => {
     }
 }
 
+//重画
 let redraw = () => {
-    canvasMap.forEach((value, key) => {
-        let canvas = value
+    dataMap.forEach((value, key) => {
+        let canvas = value.canvas
+        if (!canvas) return true
         let ctx = canvas.getContext("2d")
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawImg(key)
@@ -76,16 +63,10 @@ let redraw = () => {
     })
 }
 
+//获取图片
 let getImgData = (index) => {
-    if (!canvasMap.has(index)) {
-        return false
-    }
-    let canvas = canvasMap.get(index)
+    let canvas = getCanvas(index)
+    if (!canvas) return false
     let imageData = canvas.toDataURL('image/png');
     return imageData
-}
-
-let clearImgMap = () =>{
-    canvasMap.clear()
-    imgMap.clear()
 }

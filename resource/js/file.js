@@ -1,20 +1,21 @@
 "use strict";
 
-let fileMap = new Map()
-
+//批量读文件
 let readFiles = (files) => {
     files.forEach((item, index) => {
         readFile(item, index)
     })
 }
 
+//读取单文件
 let readFile = (file, index) => {
-    fileMap.set(index, file)
+    setFile(index, file)
     let fileReader = new FileReader;
     fileReader.onload = () => {
         let img = new Image
         img.onload = () => {
-            imgMap.set(index, img)
+            setImg(index, img)
+            setCanvas(index, document.getElementById("canvas_"+index))
             drawImg(index)
             drawText(index)
         }
@@ -23,31 +24,31 @@ let readFile = (file, index) => {
     fileReader.readAsDataURL(file)
 }
 
+//下载单图
 let downloadImg = (index) => {
-    if (!fileMap.has(index)) {
-        return false
-    }
-    if (!canvasMap.has(index)) {
+    let file = getFile(index)
+    if (!file) {
         return false
     }
 
     let linkarea = document.getElementById("downloadLinks")
 
-    let file = fileMap.get(index)
+    if (!file) return false
     let link = document.createElement('a')
     link.download = generateFileName(file.name)
     link.style.display = 'none'
     let imageData = getImgData(index)
     link.href = imageData
-    linkarea.append(link)
+    linkarea.appendChild(link)
     setTimeout(_ => {
         link.click()
-        linkarea.remove(link)
+        linkarea.removeChild(link)
     }, 100)
 }
 
+//批量下载
 let batchDownloadImg = () => {
-    fileMap.forEach((value, key) => {
+    dataMap.forEach((value, key) => {
         downloadImg(key)
     })
 }
@@ -64,9 +65,6 @@ let generateFileName = (fileName) => {
     let hour = ("0"+now.getHours()).slice(-2)
     let minute = ("0"+now.getMinutes()).slice(-2)
     let second = ("0"+now.getSeconds()).slice(-2)
-    return fileName+"_watermark_"+year+month+day+hour+minute+second+".png"
-}
-
-let clearFileMap = () =>{
-    fileMap.clear()
+    let milliseconds = ("00"+now.getMilliseconds).slice(-3)
+    return fileName+"_watermark_"+year+month+day+hour+minute+second+milliseconds+".png"
 }
