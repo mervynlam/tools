@@ -1,0 +1,53 @@
+.body-box {
+    background-color: rgb(216, 218, 218);
+}
+
+.box-card{
+    width:70%;
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.tag{
+    background-color: darkcyan;
+    position: absolute;
+    top: 12px;
+    right: -25px;
+    text-align: center;
+    width: 90px;
+    height: 20px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #fff;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.tag:hover {
+    cursor: pointer;
+}
+
+.upload-demo{
+    text-align: center;
+}
+
+canvas {
+    max-width: 25%;
+}
+
+.demonstration {
+    line-height: 40px;
+}
+
+.block {
+    width: 500px;
+    padding: 15px 20px;
+}
+
+.block>*:last-child {
+    float: right;
+    width: 70%;
+}
