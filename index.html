@@ -91,12 +91,14 @@
           <i class="shadow-icon el-icon-download" @click="download(index)"></i>
         </div>
       </div>
-      <div id="downloadLinks"></div>
     </el-card>
 
     <div class="preview-img" v-if="previewFlag">
+      <i class="close-icon el-icon-circle-close" @click="closePreview()"></i>
       <el-image :src="previewData" :fit="fit"></el-image>
     </div>
+
+    <div id="downloadLinks"></div>
   </div>
 
   <script src="./resource/js/file.js" type="text/javascript"></script>
@@ -163,6 +165,10 @@
           }
           this.previewData = imgData
           this.previewFlag = true
+        },
+        closePreview() {
+          this.previewData = ''
+          this.previewFlag = false
         }
       }
     })

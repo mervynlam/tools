@@ -98,13 +98,20 @@ canvas {
     top: 0;
     right: 0;
     left: 0;
-    bottom: 0;
-}
-
-.preview-img>.el-image{
+    min-height: 100%;
+    height: auto;
     z-index:1200;
 }
 
-.preview-img>*>img{
-    margin:30px;
+.preview-img>.el-image{
+    max-width: 95%;
+    margin: 30px auto;
+}
+
+.preview-img>.close-icon{
+    color: white;
+    font-size: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
