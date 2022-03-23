@@ -75,3 +75,12 @@ let redraw = () => {
         drawText(key)
     })
 }
+
+let getImgData = (index) => {
+    if (!canvasMap.has(index)) {
+        return false
+    }
+    let canvas = canvasMap.get(index)
+    let imageData = canvas.toDataURL('image/png');
+    return imageData
+}

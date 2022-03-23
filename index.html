@@ -25,34 +25,82 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__text">只能上传jpg/png文件，且不超过10张</div>
       </el-upload>
-      <div class="block">
-        <span class="demonstration">文字</span>
-        <el-input placeholder="请输入水印文字" v-model="text" @input="handleDrawText"></el-input>
+      <div class="config">
+        <el-row>
+          <el-col :offset="4" :span="16">
+            <el-input placeholder="请输入水印文字" v-model="text" @input="handleDrawText"></el-input>
+          </el-col>
+        </el-row>
+        <el-row :gutter="50">
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="6">
+                <div class="demonstration">
+                  <span>大小</span>
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <el-slider v-model="size" :min="10" :format-tooltip="formatTooltip" @input="handleDrawText"></el-slider>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="6">
+                <div class="demonstration">
+                  <span>角度</span>
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <el-slider v-model="angle" :min="0" :max="360" @input="handleDrawText"></el-slider>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row :gutter="50">
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="6">
+                <div class="demonstration">
+                  <span>间距</span>
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <el-slider v-model="space" :min="0" :max="5" :step="0.05" @input="handleDrawText"></el-slider>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="6">
+                <div class="demonstration">
+                  <span>颜色</span>
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <el-color-picker v-model="color" show-alpha @input="handleDrawText"></el-color-picker>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
       </div>
-      <div class="block">
-        <span class="demonstration">大小</span>
-        <el-slider v-model="size" :min="10" :format-tooltip="formatTooltip" @input="handleDrawText"></el-slider>
-      </div>
-      <div class="block">
-        <span class="demonstration">角度</span>
-        <el-slider v-model="angle" :min="0" :max="360" @input="handleDrawText"></el-slider>
-      </div>
-      <div class="block">
-        <span class="demonstration">间距</span>
-        <el-slider v-model="space" :min="0" :max="5" :step="0.05" @input="handleDrawText"></el-slider>
-      </div>
-      <div class="block">
-        <span class="demonstration">颜色</span>
-        <el-color-picker v-model="color" show-alpha @input="handleDrawText"></el-color-picker>
-      </div>
-      <div v-for="(img, index) in imgList" :id="'shade_'+index" class="shadow">
+      <div v-for="(img, index) in imgList" class="box-canvas">
         <canvas :id="'canvas_'+index"></canvas>
+        <div class="shadow">
+          <i class="shadow-icon el-icon-search" @click="preview(index)"></i>
+          <i class="shadow-icon el-icon-download" @click="download(index)"></i>
+        </div>
       </div>
+      <div id="downloadLinks"></div>
     </el-card>
+
+    <div class="preview-img" v-if="previewFlag">
+      <el-image :src="previewData" :fit="fit"></el-image>
+    </div>
   </div>
 
   <script src="./resource/js/file.js" type="text/javascript"></script>
-  <script src="./resource/js/paint.js" type="text/javascript"></script>
+  <script src="./resource/js/image.js" type="text/javascript"></script>
   <script>
     let app = new Vue({
       el: '#app',
@@ -61,25 +109,38 @@
         angle: 45,
         imgList: [],
         acceptFile: "png,jpg,jpeg",
-        fileNum: 0,
+        fileIndex: 0,
         color: 'rgba(249, 183, 38, 0.66)',
         text: '',
         space: 2,
+        fileSet: new Set(),
+        previewFlag:false,
+        previewData:'',
       },
       methods: {
         //上传前钩子
         beforeUpload(file) {
+          console.log(file)
           let fileType = file.type
+          //类型不支持
           if (fileType != 'image/png' && fileType != 'image/jpeg') {
-            this.$message({ type: 'info', message: '仅支持png/jpg文件' })
+            this.$message({ type: 'info', message: file.name + ' 添加失败，仅支持png/jpg文件', showClose: true })
             return false
           }
+          //文件已加入
+          let uid = file.name + file.size
+          if (this.fileSet.has(uid)) {
+            this.$message({ type: 'info', message: file.name + ' 文件已存在', showClose: true })
+            return false
+          }
+          //加入set，去重
+          this.fileSet.add(uid)
           this.imgList.push(file)
-          readFile(file, this.fileNum++)
+          readFile(file, this.fileIndex++)
           return false
         },
         handleExceed(files, fileList) {
-          this.$message({ type: 'info', message: '最多上传10张图片' })
+          this.$message({ type: 'info', message: '最多上传10张图片', showClose: true })
         },
         //重画
         handleDrawText() {
@@ -90,6 +151,18 @@
         },
         toGithub() {
           window.open("https://github.com/mervynlam/watermark")
+        },
+        download(index) {
+          downloadImg(index)
+        },
+        preview(index){
+          let imgData = getImgData(index)
+          if(imgData == false) {
+            this.$message({showClose: true, type:'info', message:'图片丢失'})
+            return
+          }
+          this.previewData = imgData
+          this.previewFlag = true
         }
       }
     })
