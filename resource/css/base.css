@@ -61,6 +61,18 @@
     margin: 40px 0px;
 }
 
+.btn-donate{
+    color: #fff;
+    background-color: #ffb23f;
+    border-color: #ffb23f;
+}
+
+.btn-donate:hover{
+    color: #fff;
+    background-color: #f7be68;
+    border-color: #f7be68;
+}
+
 /* 图片栅栏 */
 .img-row{
     margin: 10px 0px;
