@@ -97,7 +97,7 @@
           <el-button type="primary" icon="el-icon-refresh-right" @click="resetStyle">重置样式</el-button>
           <!-- <el-button type="primary" icon="el-icon-download" @click="batchDownload">批量下载</el-button> -->
           <el-button type="primary" icon="el-icon-download" @click="doanloadZip">打包下载</el-button>
-          <!-- <el-button class="btn-donate" icon="el-icon-milk-tea" @click="">请我喝茶</el-button> -->
+          <el-button class="btn-donate" icon="el-icon-milk-tea" @click="openDonate">支持一下</el-button>
         </el-button-group>
       </div>
 
@@ -126,6 +126,15 @@
       </el-image>
     </div>
 
+    <div class="box-donate" v-if="donateFlag">
+      <i class="close-icon el-icon-circle-close" @click="closeDonate()"></i>
+      <div class="donate-text"><span>感谢您的支持</span></div>
+      <div class="donate-img">
+        <el-image src="./resource/img/alipay.png"></el-image>
+        <el-image src="./resource/img/wechat.png"></el-image>
+      </div>
+    </div>
+
     <div id="downloadLinks"></div>
   </div>
 
@@ -149,6 +158,7 @@
         previewFlag:false,
         previewData:'',
         sizeLimit: 5,//文件大小限制，单位M
+        donateFlag:false,
       },
       methods: {
         //上传前钩子
@@ -234,6 +244,14 @@
         //打包下载
         doanloadZip() {
           downloadZip()
+        },
+        //喝茶
+        openDonate() {
+          this.donateFlag = true
+        },
+        //关闭喝茶
+        closeDonate() {
+          this.donateFlag = false
         }
       },
     })

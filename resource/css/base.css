@@ -159,3 +159,48 @@ canvas {
     right: 20px;
     z-index: 20;
 }
+
+/* 喝茶box */
+.box-donate {
+    background-color: rgba(0,0,0,0.6);
+    text-align: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100%;
+    z-index:5000;
+}
+
+.box-donate>.donate-img{
+    margin: 30px auto;
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donate-img>.el-image{
+    height: 50%;
+}
+
+.box-donate>.close-icon{
+    color: white;
+    font-size: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 20;
+}
+
+.donate-text{
+    display: flex;
+    position: fixed;
+    height: 25%;
+    justify-content: center;
+    align-items: end;
+    width: 100%;
+    color: white;
+    font-size: 25px;
+}
