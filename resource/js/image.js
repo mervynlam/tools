@@ -25,7 +25,7 @@ let drawText = (index) => {
     let textSize = size/100 * (Math.max(20,Math.min(canvas.width, canvas.height) / 5))
 
     let fontCtx = canvas.getContext("2d")
-    fontCtx.font = 'bold '+textSize+"px serif";
+    fontCtx.font = 'bold '+textSize+'px "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif';
     fontCtx.fillStyle = color
     fontCtx.rotate(angle*Math.PI/180)
 
