@@ -1,19 +1,19 @@
-# Watermark pictures
+# Vue 3 + Vite
 
-批量给图片加水印，没有任何网络请求，保护证件、隐私、敏感图片安全。  
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-[Vue.js](https://cn.vuejs.org/index.html) + [element-ui](https://element.faas.ele.me/#/zh-CN/component/installation) + [JSZip](https://github.com/Stuk/jszip)
+## Recommended IDE Setup
 
-### 特性
-- **批量**加水印
-- 可配置大小、角度、间距、颜色
-- 打包下载
-- 大图预览
+- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 
-### 截图
+## run
 
-![样式配置](https://raw.githubusercontent.com/mervynlam/Pictures/master/202203242008323.gif)
+yarn dev
 
-![界面](https://raw.githubusercontent.com/mervynlam/Pictures/master/202203242005695.png)
+## build
 
-![大图预览](https://raw.githubusercontent.com/mervynlam/Pictures/master/202203242005566.png )
+yarn build
+
+## preview
+
+yarn preview
