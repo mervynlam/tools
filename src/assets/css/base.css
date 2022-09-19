@@ -5,12 +5,12 @@
 
 /* 卡片 */
 .box-card {
-    width: 70%;
-    margin: 0 auto;
+    margin: 0 20px;
     position: absolute;
     left: 0;
     right: 0;
     border: 0;
+    margin-top: 68px;
 }
 
 .box-card>.el-card__header {
@@ -66,6 +66,9 @@
 
 .config>.el-row {
     margin: 10px 0px;
+}
+.el-col {
+    margin: 10px;
 }
 
 /* 配置区文字 */
