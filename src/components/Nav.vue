@@ -1,6 +1,6 @@
 <script>
 import alipay from '@/assets/img/alipay.png'
-import wechat from '@/assets/img/alipay.png'
+import wechat from '@/assets/img/wechat.png'
 export default {
   setup() {
     const router = useRouter();
