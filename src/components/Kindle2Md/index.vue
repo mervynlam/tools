@@ -51,6 +51,8 @@ export default {
 
       // 更新当前文件
       note = file;
+      // 清空markdown
+      markdown.value = ''
       if (note.name === file.name) {
         ElMessage({
           type: "success",
