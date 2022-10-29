@@ -16,12 +16,12 @@ function html2Md() {
     if (author) {
       if (author.innerHTML.split("：").length >= 1) {
         const content =
-          "——" + author.innerHTML.split("：")[1].replace("\n", "") + " \n\n";
+          "Author: " + author.innerHTML.split("：")[1].replace("\n", "") + " \n\n";
         return content;
       }
-      return "——" + author.innerHTML.replace("\n", "") + " \n\n";
+      return "Author: " + author.innerHTML.replace("\n", "") + " \n\n";
     }
-    return "——" + "佚名" + " \n\n";
+    return "Author: " + "佚名" + " \n\n";
   };
 
   const handleNodeList = (nodeList, callback, markdown) => {
