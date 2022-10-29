@@ -68,7 +68,7 @@ export default {
 
     //上传前钩子
     const beforeUpload = (file) => {
-      let fileType = file.type;
+      const fileType = file.type;
       //类型不支持
       if (fileType != "image/png" && fileType != "image/jpeg") {
         ElMessage({

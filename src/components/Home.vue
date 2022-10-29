@@ -16,9 +16,15 @@ export default {
       router.push("/splice");
     }
 
+    // 转跳到kindle2md
+    function go2Kindle2Md() {
+      router.push("/kindle2md");
+    }
+
     return {
       go2Watermark,
       go2Splice,
+      go2Kindle2Md,
     };
   },
 };
@@ -39,6 +45,12 @@ export default {
         <i-et-pictures />
       </el-icon>
       Splice
+    </el-button>
+    <el-button @click="go2Kindle2Md">
+      <el-icon style="vertical-align: middle" class="icon">
+        <i-ep-notebook />
+      </el-icon>
+      Kindle Note to Markdown
     </el-button>
   </div>
 </template>

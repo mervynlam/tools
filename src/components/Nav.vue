@@ -4,8 +4,12 @@ import wechat from '@/assets/img/wechat.png'
 export default {
   setup() {
     const router = useRouter();
-    const warningTooltip = ref(
+    const watermarkTooltip = ref(
       "安全、高效的给图片加水印，没有任何网络请求，保护证件安全。"
+    );
+
+    const kindle2MdTooltip = ref(
+      "在线工具将kindle笔记转markdown格式"
     );
     const currentPage = ref(router.currentRoute.value.name);
     const donateFlag = ref(false);
@@ -31,7 +35,8 @@ export default {
     };
 
     return {
-      warningTooltip,
+      watermarkTooltip,
+      kindle2MdTooltip,
       currentPage,
       donateFlag,
       toGithub,
@@ -61,13 +66,21 @@ export default {
         <!-- <el-tooltip :content="warningTooltip" placement="top">
           <i class="warining-icon el-icon-warning-outline"></i>
         </el-tooltip> -->
-        <el-tooltip :content="warningTooltip" placement="bottom">
+        <el-tooltip :content="watermarkTooltip" placement="bottom">
           <el-icon class="warning">
             <i-ep-warning />
           </el-icon>
         </el-tooltip>
       </el-menu-item>
       <el-menu-item index="splice"><span>图片拼接</span></el-menu-item>
+      <el-menu-item index="kindle2md"
+        ><span>Kindle Note to Markdown</span>
+        <el-tooltip :content="kindle2MdTooltip" placement="bottom">
+          <el-icon class="warning">
+            <i-ep-warning />
+          </el-icon>
+        </el-tooltip>
+      </el-menu-item>
     </el-menu>
     <div class="buttons">
       <el-button type="plain" link class="button" @click="openDonate()">
