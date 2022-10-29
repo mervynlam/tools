@@ -10,14 +10,12 @@ function fileJs() {
       fileReader.readAsText(note);
       fileReader.onload = () => {
         document.getElementById(`html`).innerHTML += fileReader.result; // reader.result为获取结果
-        // console.log("fileReader.result...11111111", fileReader.result);
         getBookTitle();
         getAuthors();
         const curMd = getNotes();
         if (curMd) {
           markdown.value = curMd;
         }
-        // console.log("markdown.value...11111111");
       };
     }
   };
@@ -32,7 +30,6 @@ function fileJs() {
 
   //下载单图
   const downloadMarkdown = (markdown, note) => {
-    console.log("...markdown", markdown);
     if (!markdown || !markdown.value) {
       ElMessage({
         type: "error",

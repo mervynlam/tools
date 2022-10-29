@@ -15,13 +15,7 @@ export default {
     const { readFile, downloadMarkdown } = fileJs();
     /* markdown 渲染 */
     const render = new marked.Renderer();
-    // render.blockquote = (text) => {
-    //   console.log(text);
-    //   const blockquote = text.replaceAll("<div>",'').replaceAll("</div>",'')
-    //   return "<blockquote>" + blockquote + "</blockquote>";
-    // };
     render.em = (text) => {
-      console.log("em", text);
       const type = text.indexOf("备注") > -1 ? "note" : "mark";
       const isBlockquote = type === "mark" ? "<blockquote>" : "";
       return `<p class='${type}'><em>` + text + `</em></p>${isBlockquote}`;
@@ -29,7 +23,6 @@ export default {
     render.paragraph = (text) => {
       const type = text.indexOf("备注") > -1 ? "note" : "mark";
       const isBlockquote = type === "mark" ? "</blockquote>" : "";
-      console.log("paragraph,", text);
       return "<div>" + text.replaceAll("&gt; ", "") + `${isBlockquote}</div>`;
     };
 
@@ -65,11 +58,8 @@ export default {
           showClose: true,
         });
       }
-      // console.log("note...", note);
-      // markdown.value += '# this is title'
 
       readFile(note, markdown);
-      console.log("markdown.value...", markdown);
     };
 
     /* 下载 markdown */

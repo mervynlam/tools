@@ -58,7 +58,6 @@ function html2Md() {
         "## " + element.firstChild.textContent.replaceAll(" ", "") + " \n";
       markdown.push(content);
       return;
-      // console.log("markdown...H2", markdown);
     }
     if (element.tagName == "H3") {
       const content = "*" + element.textContent.replaceAll(" ", "") + "* \n";
@@ -66,7 +65,6 @@ function html2Md() {
 
       markdown.push(content, tag);
       return;
-      // console.log("markdown...H3", markdown);
     }
     if (element.tagName !== "DIV") {
       return;
@@ -80,12 +78,10 @@ function html2Md() {
         element.firstChild.textContent.replaceAll(" ", "") + " \n\n" + " \n\n";
       markdown.push(content);
 
-      // console.log("markdown...DIV", markdown);
     }
     if (element.childNodes) {
       handleNodeList(element.childNodes, parseNotes, markdown);
       return;
-      // console.log("markdown...", markdown);
     }
 
     return;
