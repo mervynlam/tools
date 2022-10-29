@@ -48,6 +48,7 @@ export default defineConfig({
             "et",
             "humbleicons",
             "ant-design",
+            "flat-color-icons",
           ],
         }),
         // Auto register Element Plus components
