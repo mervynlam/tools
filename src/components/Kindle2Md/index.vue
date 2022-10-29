@@ -16,14 +16,25 @@ export default {
     /* markdown 渲染 */
     const render = new marked.Renderer();
     render.em = (text) => {
-      const type = text.indexOf("备注") > -1 ? "note" : "mark";
+      const type =
+        text.indexOf("备注") > -1
+          ? "note"
+          : text.indexOf("标注") > -1
+          ? "mark"
+          : "";
       const isBlockquote = type === "mark" ? "<blockquote>" : "";
       return `<p class='${type}'><em>` + text + `</em></p>${isBlockquote}`;
     };
     render.paragraph = (text) => {
-      const type = text.indexOf("备注") > -1 ? "note" : "mark";
+      const type =
+        text.indexOf("备注") > -1
+          ? "note"
+          : text.indexOf("标注") > -1
+          ? "mark"
+          : "";
       const isBlockquote = type === "mark" ? "</blockquote>" : "";
-      return "<div>" + text.replaceAll("&gt; ", "") + `${isBlockquote}</div>`;
+      const isAuthor = text.indexOf("Author: ") > -1 ? "class='author'" : ""
+      return `<div ${isAuthor}>` + text.replaceAll("&gt; ", "") + `${isBlockquote}</div>`;
     };
 
     marked.setOptions({
@@ -52,7 +63,7 @@ export default {
       // 更新当前文件
       note = file;
       // 清空markdown
-      markdown.value = ''
+      markdown.value = "";
       if (note.name === file.name) {
         ElMessage({
           type: "success",
@@ -226,6 +237,14 @@ export default {
   padding: 20px;
   border-radius: 4px;
 }
+:deep(div#card > div.author) {
+  margin: 20px 20px 40px 0;
+  margin-bottom: 40px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: right;
+}
 
 :deep(div#card > div > blockquote) {
   margin-left: 20px;
@@ -276,8 +295,6 @@ export default {
   padding: 10px 10px;
   border-radius: 4px;
 }
-
-
 
 .option-area {
   width: 50%;
