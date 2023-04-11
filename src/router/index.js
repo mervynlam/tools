@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import Splice from "../components/Splice.vue";
 import Watermark from "../components/Watermark/index.vue";
 import Kindle2Md from "../components/Kindle2Md/index.vue";
+import DrawGrids from "../components/DrawGrids/index.vue";
 import Home from "../components/Home.vue";
 
 const routes = [
@@ -29,6 +30,11 @@ const routes = [
     path: "/kindle2md",
     name: "kindle2Md",
     component: Kindle2Md,
+  },
+  {
+    path: "/drawgrids",
+    name: "drawgrids",
+    component: DrawGrids,
   },
 ];
 

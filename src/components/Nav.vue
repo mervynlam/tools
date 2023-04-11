@@ -81,6 +81,14 @@ export default {
           </el-icon>
         </el-tooltip>
       </el-menu-item>
+      <el-menu-item index="drawgrids"
+        ><span>方格模板</span>
+        <el-tooltip :content="kindle2MdTooltip" placement="bottom">
+          <el-icon class="warning">
+            <i-ep-warning />
+          </el-icon>
+        </el-tooltip>
+      </el-menu-item>
     </el-menu>
     <div class="buttons">
       <el-button type="plain" link class="button" @click="openDonate()">

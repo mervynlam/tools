@@ -1,0 +1,96 @@
+"use strict";
+import drawJs from "./draw";
+function imageJs( size, color, text, type, paper) {
+  const typearr = ['米字格','田字格','方格','竖行','横行']
+  let canvasGlobal;
+  //画图
+  const drawImg = () => {
+    const canvas = document.getElementById("gridCanvas")
+    canvasGlobal = canvas;
+    canvas.width = paper.width*96/2.54;
+    canvas.height = paper.height*96/2.54;
+    const {
+      drawHorizontal,
+      drawVertical,
+      drawBorder,
+      drawDottedHorizontal,
+      drawDottedVertical,
+      drawDiagonal,
+      drawTitle
+    } = drawJs(size.value,color.value,text.value,paper,canvas)
+
+    drawBorder()
+    drawTitle()
+    switch(type.value) {
+      case '0':
+        //米
+        drawHorizontal()
+        drawVertical()
+        drawDottedHorizontal()
+        drawDottedVertical()
+        drawDiagonal()
+        break;
+      case '1':
+        //田
+        drawHorizontal()
+        drawVertical()
+        drawDottedHorizontal()
+        drawDottedVertical()
+        break;
+      case '2':
+        //方格
+        drawHorizontal()
+        drawVertical()
+        break;
+      case '3':
+        //竖
+        drawVertical()
+        break;
+      case '4':
+        //横
+        drawHorizontal()
+        break;
+      default:
+        drawHorizontal()
+        drawVertical()
+        drawDottedHorizontal()
+        drawDottedVertical()
+        drawDiagonal()
+    }
+  };
+
+  //获取图片
+  const getImgData = () => {
+    if (!canvasGlobal) return false;
+    const imageData = canvasGlobal.toDataURL("image/png");
+    return imageData;
+  };
+
+  //获取图片base64
+  const getImgBase64 = () => {
+    const dataUrl = getImgData();
+    const idx = dataUrl.indexOf("base64,");
+    return dataUrl.substring(idx + "base64,".length);
+  };
+
+  //下载单图
+  const downloadImg = () => {
+
+    const linkarea = document.getElementById("downloadLinks");
+
+    const link = document.createElement("a");
+    link.download = `${size.value}_${typearr[type.value]}.png`
+    link.style.display = "none";
+    const imageData = getImgData();
+    link.href = imageData;
+    linkarea.appendChild(link);
+    setTimeout((_) => {
+      link.click();
+      linkarea.removeChild(link);
+    }, 100);
+  };
+
+  return { drawImg, getImgData, getImgBase64, downloadImg };
+}
+
+export default imageJs;
