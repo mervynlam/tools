@@ -1,5 +1,9 @@
 "use strict";
+import utilsJs from "./utils";
 function drawJs(size, color, text, paper, canvas) {
+  const {
+    cm2px
+  } = utilsJs()
   
   const ctx = canvas.getContext('2d');
   
@@ -7,26 +11,37 @@ function drawJs(size, color, text, paper, canvas) {
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  //默认页边距*2
+  //默认页边距cm*2
   const defaultSpace = 3
-  //厘米像素换算
-  const perUnit = 96/2.54;
   //横格数量
   const horizontalNum=Math.floor((paper.width-defaultSpace)/size)
   //竖格数量
   const verticalNum=Math.floor((paper.height-defaultSpace)/size)
+
+  /*============这里都是厘米============*/
   //横边距
-  const hSpace = ((paper.width - horizontalNum*size)/2).toFixed(1);
+  const hSpace = ((paper.width - horizontalNum*size)/2).toFixed(2);
   //竖边距
-  const vSpace = ((paper.height - verticalNum*size)/2).toFixed(1);
+  const vSpace = ((paper.height - verticalNum*size)/2).toFixed(2);
+  /*============这里都是厘米============*/
+  /*============这里都是像素============*/
+  const hSpacePx = cm2px(hSpace)
+  const vSpacePx = cm2px(vSpace)
+  const sizePx = cm2px(size)
+  /*============这里都是像素============*/
+
+  const normalWeight = 2
+  const boldWeight = 5
+  const thinWeight = 0.5
+  const dottedDash = [5,5]
 
   const drawBorder = () => {
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
-    ctx.lineWidth = 0.5;
-    ctx.strokeRect(hSpace * perUnit, vSpace * perUnit, horizontalNum*size*perUnit, verticalNum*size*perUnit);
-    ctx.lineWidth = 1;
-    ctx.strokeRect(hSpace * perUnit-5, vSpace * perUnit-5, horizontalNum*size*perUnit+10, verticalNum*size*perUnit+10);
+    ctx.lineWidth = normalWeight;
+    ctx.strokeRect(hSpacePx, vSpacePx, horizontalNum*sizePx, verticalNum*sizePx);
+    ctx.lineWidth = boldWeight;
+    ctx.strokeRect(hSpacePx-15, vSpacePx-15, horizontalNum*sizePx+30, verticalNum*sizePx+30);
     ctx.stroke()
   }
 
@@ -36,10 +51,10 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
-    ctx.lineWidth = 0.5;
-    for (let i = vSpace * perUnit+size*perUnit, j = 1; j < verticalNum; i += size * perUnit, j++) {
-      ctx.moveTo(hSpace*perUnit, i);
-      ctx.lineTo(hSpace*perUnit+horizontalNum*size*perUnit, i)
+    ctx.lineWidth = normalWeight;
+    for (let i = vSpacePx+sizePx, j = 1; j < verticalNum; i += sizePx, j++) {
+      ctx.moveTo(hSpacePx, i);
+      ctx.lineTo(hSpacePx+horizontalNum*sizePx, i)
     }
     ctx.stroke()
     ctx.closePath();
@@ -52,10 +67,10 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
-    ctx.lineWidth = 0.5;
-    for (let i = hSpace * perUnit+size*perUnit, j = 1; j < horizontalNum; i += size * perUnit, j++) {
-      ctx.moveTo(i, vSpace * perUnit);
-      ctx.lineTo(i, vSpace*perUnit+verticalNum*size*perUnit)
+    ctx.lineWidth = normalWeight;
+    for (let i = hSpacePx+sizePx, j = 1; j < horizontalNum; i += sizePx, j++) {
+      ctx.moveTo(i, vSpacePx);
+      ctx.lineTo(i, vSpacePx+verticalNum*sizePx)
     }
     ctx.stroke()
     ctx.closePath();
@@ -68,11 +83,11 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
-    ctx.setLineDash([5,2,2,2])
-    ctx.lineWidth = 0.3;
-    for (let i = vSpace * perUnit+(size/2).toFixed(2)*perUnit, j = 0; j < verticalNum; i += size * perUnit, j++) {
-      ctx.moveTo(hSpace*perUnit, i);
-      ctx.lineTo(hSpace*perUnit+horizontalNum*size*perUnit, i)
+    ctx.setLineDash(dottedDash)
+    ctx.lineWidth = thinWeight;
+    for (let i = vSpacePx+(sizePx/2), j = 0; j < verticalNum; i += sizePx, j++) {
+      ctx.moveTo(hSpacePx, i);
+      ctx.lineTo(hSpacePx+horizontalNum*sizePx, i)
     }
     ctx.stroke()
     ctx.closePath();
@@ -85,11 +100,11 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
-    ctx.setLineDash([5,2,2,2])
-    ctx.lineWidth = 0.3;
-    for (let i = hSpace * perUnit+(size/2).toFixed(2)*perUnit, j = 0; j < horizontalNum; i += size * perUnit, j++) {
-      ctx.moveTo(i, vSpace * perUnit);
-      ctx.lineTo(i, vSpace*perUnit+verticalNum*size*perUnit)
+    ctx.setLineDash(dottedDash)
+    ctx.lineWidth = thinWeight;
+    for (let i = hSpacePx+(sizePx/2), j = 0; j < horizontalNum; i += sizePx, j++) {
+      ctx.moveTo(i, vSpacePx);
+      ctx.lineTo(i, vSpacePx+verticalNum*sizePx)
     }
     ctx.stroke()
     ctx.closePath();
@@ -102,14 +117,14 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
-    ctx.setLineDash([5,2,2,2])
-    ctx.lineWidth = 0.3;
+    ctx.setLineDash(dottedDash)
+    ctx.lineWidth = thinWeight;
     for (let i = 0; i < horizontalNum; ++i) {
       for (let j = 0; j < verticalNum; ++j) {
-        ctx.moveTo(hSpace*perUnit+i*size*perUnit,vSpace*perUnit+j*size*perUnit);
-        ctx.lineTo(hSpace*perUnit+(i+1)*size*perUnit,vSpace*perUnit+(j+1)*size*perUnit)
-        ctx.moveTo(hSpace*perUnit+(i+1)*size*perUnit,vSpace*perUnit+j*size*perUnit);
-        ctx.lineTo(hSpace*perUnit+i*size*perUnit,vSpace*perUnit+(j+1)*size*perUnit)
+        ctx.moveTo(hSpacePx+i*sizePx,vSpacePx+j*sizePx);
+        ctx.lineTo(hSpacePx+(i+1)*sizePx,vSpacePx+(j+1)*sizePx)
+        ctx.moveTo(hSpacePx+(i+1)*sizePx,vSpacePx+j*sizePx);
+        ctx.lineTo(hSpacePx+i*sizePx,vSpacePx+(j+1)*sizePx)
       }
     }
     ctx.stroke()
@@ -125,7 +140,7 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.fillStyle = color;
 
     const textHeight = parseInt(font);
-    const y = (vSpace*perUnit - textHeight) / 2;
+    const y = (vSpacePx - textHeight) / 2;
     ctx.textAlign = "center"; // 设置文本水平居中
     ctx.textBaseline = "middle";
     ctx.fillText(text, canvas.width / 2, y + textHeight / 2);

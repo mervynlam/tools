@@ -1,14 +1,19 @@
 "use strict";
 import drawJs from "./draw";
+import utilsJs from "./utils";
 function imageJs( size, color, text, type, paper) {
+  const {
+    cm2px
+  } = utilsJs()
+  
   const typearr = ['米字格','田字格','方格','竖行','横行']
   let canvasGlobal;
   //画图
   const drawImg = () => {
     const canvas = document.getElementById("gridCanvas")
     canvasGlobal = canvas;
-    canvas.width = paper.width*96/2.54;
-    canvas.height = paper.height*96/2.54;
+    canvas.width = cm2px(paper.width);
+    canvas.height = cm2px(paper.height);
     const {
       drawHorizontal,
       drawVertical,
