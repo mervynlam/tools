@@ -207,7 +207,7 @@ export default {
 
 /* 画图区 */
 #canvas-box{
-  height:900px;
+  height:1500px;
   position: relative;
   text-align: center;
 }
