@@ -21,10 +21,16 @@ export default {
       router.push("/kindle2md");
     }
 
+    // 转跳到kindle2md
+    function go2GrawGrids() {
+      router.push("/drawgrids");
+    }
+
     return {
       go2Watermark,
       go2Splice,
       go2Kindle2Md,
+      go2GrawGrids
     };
   },
 };
@@ -51,6 +57,12 @@ export default {
         <i-ep-notebook />
       </el-icon>
       Kindle Note to Markdown
+    </el-button>
+    <el-button @click="go2GrawGrids">
+      <el-icon style="vertical-align: middle" class="icon">
+        <i-ep-grid />
+      </el-icon>
+      格子模板
     </el-button>
   </div>
 </template>
