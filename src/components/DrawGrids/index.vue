@@ -13,10 +13,9 @@
             <el-col :span="18">
               <el-slider
                 v-model="size"
-                :min="1.5"
+                :min="0.5"
                 :max="8"
-                :step="0.5"
-                show-stops
+                :step="0.1"
                 @input="handleDraw"
               ></el-slider>
             </el-col>
@@ -49,7 +48,7 @@
             </el-col>
             <el-col :span="18">
               <el-radio-group v-model="type" @change="handleDraw">
-                <el-radio v-for="item in options" :label="item.key">{{item.value}}</el-radio>
+                <el-radio v-for="item in typeOptions" :label="item.key">{{item.value}}</el-radio>
               </el-radio-group>
             </el-col>
           </el-row>
@@ -67,6 +66,22 @@
                 show-alpha
                 @active-change="changeColor"
               ></el-color-picker>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row :gutter="50">
+        <el-col :span="12">
+          <el-row>
+            <el-col :span="6">
+              <div class="demonstration">
+                <span>纸张大小</span>
+              </div>
+            </el-col>
+            <el-col :span="18">
+              <el-radio-group v-model="paperType" @change="handleDraw">
+                <el-radio v-for="item in paperOptions" :label="item.key">{{item.value}}</el-radio>
+              </el-radio-group>
             </el-col>
           </el-row>
         </el-col>
@@ -94,45 +109,20 @@
 <script>
 import { onMounted } from "vue";
 import imageJs from "./image.js";
+import {paperOptions, typeOptions} from "./constants.js";
 export default {
   setup() {
     const size = ref(1.5);//方格大小
     const color = ref("rgba(69, 69, 69, 1)");
     const text = ref("");//标题
     const type = ref('1');//格子类型
-    const paper = {//纸张大小
-      width:21,
-      height:29.7
-    }
-    const options = [
-      {
-        key:'0',
-        value:'米字格',
-      },
-      {
-        key:'1',
-        value:'田字格',
-      },
-      {
-        key:'2',
-        value:'方格',
-      },
-      {
-        key:'3',
-        value:'竖行',
-      },
-      {
-        key:'4',
-        value:'横行',
-      },
-    ];
-
+    const paperType = ref("0")
     const { drawImg, downloadImg } = imageJs(
       size,
       color,
       text,
       type,
-      paper
+      paperType
     );
 
     //画
@@ -160,7 +150,9 @@ export default {
       color,
       text,
       type,
-      options,
+      paperType,
+      typeOptions,
+      paperOptions,
       changeColor,
       handleDraw,
       download,
