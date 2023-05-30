@@ -38,8 +38,10 @@ const routes = [
   },
 ];
 
+const baseUrl = import.meta.env.BASE_URL
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(baseUrl),
   routes,
 });
 
