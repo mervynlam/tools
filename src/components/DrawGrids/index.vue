@@ -90,11 +90,17 @@
 
     <div class="button-group">
       <el-button-group>
-        <el-button type="primary" @click="download">
+        <!-- <el-button type="primary" @click="downloadImage">
           <el-icon class="el-icon--left"
             ><i-ep-download></i-ep-download
           ></el-icon>
-          下载</el-button
+          下载图片</el-button
+        > -->
+        <el-button type="primary" @click="downloadFile">
+          <el-icon class="el-icon--left"
+            ><i-ep-download></i-ep-download
+          ></el-icon>
+          下载pdf</el-button
         >
       </el-button-group>
     </div>
@@ -117,7 +123,7 @@ export default {
     const text = ref("");//标题
     const type = ref('1');//格子类型
     const paperType = ref("0")
-    const { drawImg, downloadImg } = imageJs(
+    const { drawImg, downloadImg, downloadPDF } = imageJs(
       size,
       color,
       text,
@@ -131,8 +137,12 @@ export default {
     };
 
     //下载单图
-    function download() {
+    function downloadImage() {
       downloadImg();
+    }
+    //下载pdf
+    function downloadFile() {
+      downloadPDF();
     }
 
     // 变更颜色
@@ -155,7 +165,8 @@ export default {
       paperOptions,
       changeColor,
       handleDraw,
-      download,
+      downloadImage,
+      downloadFile,
     };
   },
 };

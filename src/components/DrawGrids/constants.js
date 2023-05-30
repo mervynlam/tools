@@ -43,7 +43,7 @@ export const paperArr = [
     height:29.7
   },
   {//b5
-    width:18.2,
-    height:25.7
+    width:17.6,
+    height:25.0
   },
 ]
