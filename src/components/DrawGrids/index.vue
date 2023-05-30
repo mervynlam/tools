@@ -90,12 +90,12 @@
 
     <div class="button-group">
       <el-button-group>
-        <el-button type="primary" @click="downloadImage">
+        <!-- <el-button type="primary" @click="downloadImage">
           <el-icon class="el-icon--left"
             ><i-ep-download></i-ep-download
           ></el-icon>
           下载图片</el-button
-        >
+        > -->
         <el-button type="primary" @click="downloadFile">
           <el-icon class="el-icon--left"
             ><i-ep-download></i-ep-download

@@ -2,7 +2,7 @@
 import drawJs from "./draw";
 import utilsJs from "./utils";
 import jspdf from "jspdf";
-import {typearr, paperArr} from './constants'
+import {typearr, paperArr, paperOptions} from './constants'
 function imageJs( size, color, text, type, paperType) {
   const {
     cm2px
@@ -11,9 +11,8 @@ function imageJs( size, color, text, type, paperType) {
   let canvasGlobal;
   //画图
   const drawImg = () => {
-    let papertmp = paperType.value;
-    papertmp = papertmp == undefined?0:papertmp<0?0:papertmp>paperArr.length?0:papertmp;
-    let paper = paperArr[papertmp]
+    let paperIndex = getPaperIndex(paperType)
+    let paper = paperArr[paperIndex]
     const canvas = document.getElementById("gridCanvas")
     canvasGlobal = canvas;
     canvas.width = cm2px(paper.width);
@@ -88,7 +87,9 @@ function imageJs( size, color, text, type, paperType) {
     const linkarea = document.getElementById("downloadLinks");
 
     const link = document.createElement("a");
-    link.download = `${size.value}_${typearr[type.value]}.png`
+    let paperIndex = getPaperIndex(paperType)
+    let paperSizeVal = paperOptions[paperIndex].value
+    link.download = `${paperSizeVal}_${size.value}_${typearr[type.value]}.png`
     link.style.display = "none";
     const imageData = getImgData();
     link.href = imageData;
@@ -101,18 +102,26 @@ function imageJs( size, color, text, type, paperType) {
 
   //下载单图
   const downloadPDF = () => {
-    let papertmp = paperType.value;
-    papertmp = papertmp == undefined?0:papertmp<0?0:papertmp>paperArr.length?0:papertmp;
-    let paper = paperArr[papertmp]
+    let paperIndex = getPaperIndex(paperType)
+    let paper = paperArr[paperIndex]
+    let paperSizeVal = paperOptions[paperIndex].value
     //创建pdf文件，文档：http://raw.githack.com/MrRio/jsPDF/master/docs/index.html
-    const doc = new jspdf({unit:'px', format:[cm2px(paper.height), cm2px(paper.width)]});
+    // const doc = new jspdf({unit:'px', format:[cm2px(paper.height), cm2px(paper.width)]});
+    //参数：单位cm，大小根据paper自定义，压缩文件大小
+    const doc = new jspdf({unit:'cm', format:[paper.height, paper.width],compress:true});
     
     const imageData = getImgData();
-    doc.addImage(imageData, 'PNG', 0, 0, cm2px(paper.width), cm2px(paper.height));
-    let fileName = `${size.value}_${typearr[type.value]}`
+    doc.addImage(imageData, 'PNG', 0, 0, paper.width, paper.height);
+    let fileName = `${paperSizeVal}_${size.value}_${typearr[type.value]}`
     // 保存
     doc.save(`${fileName}.pdf`);
   };
+
+  const getPaperIndex = (paperType) => {
+    let paperIndex = paperType.value;
+    paperIndex = paperIndex == undefined?0:paperIndex<0?0:paperIndex>paperArr.length?0:paperIndex;
+    return paperIndex;
+  }
 
   return { drawImg, getImgData, getImgBase64, downloadImg, downloadPDF };
 }
