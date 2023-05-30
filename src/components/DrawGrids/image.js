@@ -1,6 +1,7 @@
 "use strict";
 import drawJs from "./draw";
 import utilsJs from "./utils";
+import jspdf from "jspdf";
 import {typearr, paperArr} from './constants'
 function imageJs( size, color, text, type, paperType) {
   const {
@@ -98,7 +99,22 @@ function imageJs( size, color, text, type, paperType) {
     }, 100);
   };
 
-  return { drawImg, getImgData, getImgBase64, downloadImg };
+  //下载单图
+  const downloadPDF = () => {
+    let papertmp = paperType.value;
+    papertmp = papertmp == undefined?0:papertmp<0?0:papertmp>paperArr.length?0:papertmp;
+    let paper = paperArr[papertmp]
+    //创建pdf文件，文档：http://raw.githack.com/MrRio/jsPDF/master/docs/index.html
+    const doc = new jspdf({unit:'px', format:[cm2px(paper.height), cm2px(paper.width)]});
+    
+    const imageData = getImgData();
+    doc.addImage(imageData, 'PNG', 0, 0, cm2px(paper.width), cm2px(paper.height));
+    let fileName = `${size.value}_${typearr[type.value]}`
+    // 保存
+    doc.save(`${fileName}.pdf`);
+  };
+
+  return { drawImg, getImgData, getImgBase64, downloadImg, downloadPDF };
 }
 
 export default imageJs;

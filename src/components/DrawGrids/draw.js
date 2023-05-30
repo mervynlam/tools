@@ -30,10 +30,10 @@ function drawJs(size, color, text, paper, canvas) {
   const sizePx = cm2px(size)
   /*============这里都是像素============*/
 
-  const normalWeight = 2
-  const boldWeight = 5
-  const thinWeight = 0.5
-  const dottedDash = [5,5]
+  const normalWeight = 4
+  const boldWeight = 10
+  const thinWeight = 2
+  const dottedDash = [10,10]
 
   const drawBorder = () => {
     // 设置线条颜色和宽度
@@ -41,7 +41,7 @@ function drawJs(size, color, text, paper, canvas) {
     ctx.lineWidth = normalWeight;
     ctx.strokeRect(hSpacePx, vSpacePx, horizontalNum*sizePx, verticalNum*sizePx);
     ctx.lineWidth = boldWeight;
-    ctx.strokeRect(hSpacePx-15, vSpacePx-15, horizontalNum*sizePx+30, verticalNum*sizePx+30);
+    ctx.strokeRect(hSpacePx-30, vSpacePx-30, horizontalNum*sizePx+60, verticalNum*sizePx+60);
     ctx.stroke()
   }
 
