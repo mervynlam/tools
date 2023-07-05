@@ -4,7 +4,7 @@ function drawJs(size, color, text, paper, canvas) {
   const {
     cm2px
   } = utilsJs()
-  
+
   const ctx = canvas.getContext('2d');
   
   // 设置背景色
@@ -78,31 +78,41 @@ function drawJs(size, color, text, paper, canvas) {
   };
 
   //画横虚线
-  const drawDottedHorizontal = () => {
+  const drawDottedHorizontal = (transition) => {
     ctx.save()
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
     ctx.setLineDash(dottedDash)
     ctx.lineWidth = thinWeight;
+    //根据过渡参数调整格子数量
+    let horizontalNumTmp = horizontalNum
+    if (transition) {
+      horizontalNumTmp = Math.floor(horizontalNumTmp * transition)
+    }
     for (let i = vSpacePx+(sizePx/2), j = 0; j < verticalNum; i += sizePx, j++) {
       ctx.moveTo(hSpacePx, i);
-      ctx.lineTo(hSpacePx+horizontalNum*sizePx, i)
+      ctx.lineTo(hSpacePx+horizontalNumTmp*sizePx, i)
     }
     ctx.stroke()
     ctx.closePath();
     ctx.restore();
   };
 
-  //竖虚线
-  const drawDottedVertical = () => {
+  //竖虚线，参数：过渡比例
+  const drawDottedVertical = (transition) => {
     ctx.save()
     ctx.beginPath()
     // 设置线条颜色和宽度
     ctx.strokeStyle = color;
     ctx.setLineDash(dottedDash)
     ctx.lineWidth = thinWeight;
-    for (let i = hSpacePx+(sizePx/2), j = 0; j < horizontalNum; i += sizePx, j++) {
+    //根据过渡参数调整格子数量
+    let horizontalNumTmp = horizontalNum
+    if (transition) {
+      horizontalNumTmp = Math.floor(horizontalNumTmp * transition)
+    }
+    for (let i = hSpacePx+(sizePx/2), j = 0; j < horizontalNumTmp; i += sizePx, j++) {
       ctx.moveTo(i, vSpacePx);
       ctx.lineTo(i, vSpacePx+verticalNum*sizePx)
     }

@@ -2,8 +2,8 @@
 import drawJs from "./draw";
 import utilsJs from "./utils";
 import jspdf from "jspdf";
-import {typearr, paperArr, paperOptions} from './constants'
-function imageJs( size, color, text, type, paperType) {
+import {typeArr, paperArr, transitionTypeIndex} from './constants'
+function imageJs( size, color, text, type, paperType,transition) {
   const {
     cm2px
   } = utilsJs()
@@ -24,13 +24,13 @@ function imageJs( size, color, text, type, paperType) {
       drawDottedHorizontal,
       drawDottedVertical,
       drawDiagonal,
-      drawTitle
+      drawTitle,
     } = drawJs(size.value,color.value,text.value,paper,canvas)
 
     drawBorder()
     drawTitle()
     switch(type.value) {
-      case '0':
+      case 0:
         //米
         drawHorizontal()
         drawVertical()
@@ -38,23 +38,23 @@ function imageJs( size, color, text, type, paperType) {
         drawDottedVertical()
         drawDiagonal()
         break;
-      case '1':
+      case 1:
         //田
         drawHorizontal()
         drawVertical()
-        drawDottedHorizontal()
-        drawDottedVertical()
+        drawDottedHorizontal(transition.value)
+        drawDottedVertical(transition.value)
         break;
-      case '2':
+      case 2:
         //方格
         drawHorizontal()
         drawVertical()
         break;
-      case '3':
+      case 3:
         //竖
         drawVertical()
         break;
-      case '4':
+      case 4:
         //横
         drawHorizontal()
         break;
@@ -88,8 +88,11 @@ function imageJs( size, color, text, type, paperType) {
 
     const link = document.createElement("a");
     let paperIndex = getPaperIndex(paperType)
-    let paperSizeVal = paperOptions[paperIndex].value
-    link.download = `${paperSizeVal}_${size.value}_${typearr[type.value]}.png`
+    let paperSizeVal = paperArr[paperIndex].value
+    //是否需要过渡参数
+    let transitionTxt = ""
+    if (type.value == transitionTypeIndex) transitionTxt = `_${transition.value*100}%`
+    link.download = `${paperSizeVal}_${size.value}_${typeArr[type.value]}${transitionTxt}.png`
     link.style.display = "none";
     const imageData = getImgData();
     link.href = imageData;
@@ -104,7 +107,7 @@ function imageJs( size, color, text, type, paperType) {
   const downloadPDF = () => {
     let paperIndex = getPaperIndex(paperType)
     let paper = paperArr[paperIndex]
-    let paperSizeVal = paperOptions[paperIndex].value
+    let paperSizeVal = paperArr[paperIndex].value
     //创建pdf文件，文档：http://raw.githack.com/MrRio/jsPDF/master/docs/index.html
     // const doc = new jspdf({unit:'px', format:[cm2px(paper.height), cm2px(paper.width)]});
     //参数：单位cm，大小根据paper自定义，压缩文件大小
@@ -112,7 +115,10 @@ function imageJs( size, color, text, type, paperType) {
     
     const imageData = getImgData();
     doc.addImage(imageData, 'PNG', 0, 0, paper.width, paper.height);
-    let fileName = `${paperSizeVal}_${size.value}_${typearr[type.value]}`
+    //是否需要过渡参数
+    let transitionTxt = ""
+    if (type.value == transitionTypeIndex) transitionTxt = `_${transition.value*100}%`
+    let fileName = `${paperSizeVal}_${size.value}_${typeArr[type.value]}${transitionTxt}`
     // 保存
     doc.save(`${fileName}.pdf`);
   };
