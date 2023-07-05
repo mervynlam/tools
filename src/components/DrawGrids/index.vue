@@ -48,7 +48,7 @@
             </el-col>
             <el-col :span="18">
               <el-radio-group v-model="type" @change="handleDraw">
-                <el-radio v-for="item in typeOptions" :label="item.key">{{item.value}}</el-radio>
+                <el-radio v-for="(item,index) in typeArr" :label="index">{{item}}</el-radio>
               </el-radio-group>
             </el-col>
           </el-row>
@@ -80,8 +80,31 @@
             </el-col>
             <el-col :span="18">
               <el-radio-group v-model="paperType" @change="handleDraw">
-                <el-radio v-for="item in paperOptions" :label="item.key">{{item.value}}</el-radio>
+                <el-radio v-for="(item, index) in paperArr" :label="index">{{item.value}}</el-radio>
               </el-radio-group>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-col :span="6">
+              <div class="demonstration">
+                <span>过渡</span>
+                <el-tooltip :content="transitionTooltip" placement="bottom">
+                  <el-icon class="warning">
+                    <i-ep-warning />
+                  </el-icon>
+                </el-tooltip>
+              </div>
+            </el-col>
+            <el-col :span="18">
+              <el-slider
+                v-model="transition"
+                :min="0.1"
+                :max="1"
+                :step="0.05"
+                @input="handleDraw"
+              ></el-slider>
             </el-col>
           </el-row>
         </el-col>
@@ -115,20 +138,23 @@
 <script>
 import { onMounted } from "vue";
 import imageJs from "./image.js";
-import {paperOptions, typeOptions} from "./constants.js";
+import {paperArr, typeArr} from "./constants.js";
 export default {
   setup() {
     const size = ref(1.5);//方格大小
-    const color = ref("rgba(69, 69, 69, 1)");
+    const color = ref("rgba(31, 31, 31, 1)");
     const text = ref("");//标题
-    const type = ref('1');//格子类型
-    const paperType = ref("0")
+    const type = ref(1);//格子类型
+    const paperType = ref(0)//纸张大小
+    const transition = ref(1)//过渡比例
+    const transitionTooltip = "仅适用于田字格，该选项代表田字格占多少比例，剩余部分为方格，作为过渡。"
     const { drawImg, downloadImg, downloadPDF } = imageJs(
       size,
       color,
       text,
       type,
-      paperType
+      paperType,
+      transition
     );
 
     //画
@@ -161,8 +187,10 @@ export default {
       text,
       type,
       paperType,
-      typeOptions,
-      paperOptions,
+      typeArr,
+      paperArr,
+      transition,
+      transitionTooltip,
       changeColor,
       handleDraw,
       downloadImage,
