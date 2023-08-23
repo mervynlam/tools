@@ -2,8 +2,8 @@
 import drawJs from "./draw";
 import utilsJs from "./utils";
 import jspdf from "jspdf";
-import {typeArr, paperArr, transitionTypeIndex} from './constants'
-function imageJs( size, color, text, type, paperType,transition) {
+import {typeArr, paperArr, transitionTypeIndex, customStr} from './constants'
+function imageJs( size, color, text, type, paperType,transition,customWidth,customHeight) {
   const {
     cm2px
   } = utilsJs()
@@ -13,6 +13,14 @@ function imageJs( size, color, text, type, paperType,transition) {
   const drawImg = () => {
     let paperIndex = getPaperIndex(paperType)
     let paper = paperArr[paperIndex]
+    //判断是否自定义
+    if (paper.value == customStr) {
+      paper = {
+        value : customStr,
+        width : customWidth.value,
+        height : customHeight.value
+      }
+    }
     const canvas = document.getElementById("gridCanvas")
     canvasGlobal = canvas;
     canvas.width = cm2px(paper.width);
@@ -107,7 +115,15 @@ function imageJs( size, color, text, type, paperType,transition) {
   const downloadPDF = () => {
     let paperIndex = getPaperIndex(paperType)
     let paper = paperArr[paperIndex]
-    let paperSizeVal = paperArr[paperIndex].value
+    //判断是否自定义
+    if (paper.value == customStr) {
+      paper = {
+        value : `${customWidth.value}*${customHeight.value}`,
+        width : customWidth.value,
+        height : customHeight.value
+      }
+    }
+    let paperSizeVal = paper.value
     //创建pdf文件，文档：http://raw.githack.com/MrRio/jsPDF/master/docs/index.html
     // const doc = new jspdf({unit:'px', format:[cm2px(paper.height), cm2px(paper.width)]});
     //参数：单位cm，大小根据paper自定义，压缩文件大小
