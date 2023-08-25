@@ -2,6 +2,7 @@
 
 //格子类型
 export const typeArr = ['米字格','田字格','方格','竖行','横行']
+export const customStr = '自定义'
 //纸张大小选项
 export const paperArr = [
   {
@@ -13,6 +14,9 @@ export const paperArr = [
     value:'B5',
     width:17.6,
     height:25.0
+  },
+  {
+    value:customStr
   }
 ];
 export const transitionTypeIndex = 1

@@ -29,11 +29,11 @@
               </div>
             </el-col>
             <el-col :span="18">
-          <el-input
-            placeholder="请输入标题"
-            v-model="text"
-            @input="handleDraw"
-          ></el-input>
+              <el-input
+                placeholder="请输入标题"
+                v-model="text"
+                @input="handleDraw"
+              ></el-input>
             </el-col>
           </el-row>
         </el-col>
@@ -79,9 +79,31 @@
               </div>
             </el-col>
             <el-col :span="18">
-              <el-radio-group v-model="paperType" @change="handleDraw">
+              <el-radio-group v-model="paperType" @change="handleSize">
                 <el-radio v-for="(item, index) in paperArr" :label="index">{{item.value}}</el-radio>
               </el-radio-group>
+              <el-input-number
+                placeholder="宽"
+                v-model="width"
+                :controls="false"
+                :precision="1"
+                :min="0"
+                :max="50"
+                v-if="paperArr[paperType].value==customStr"
+                @change="handleDraw"
+                style="margin-left:20px;width:100px"
+              ></el-input-number>
+              <el-input-number
+                placeholder="高"
+                v-model="height"
+                :controls="false"
+                :precision="1"
+                :min="0"
+                :max="50"
+                v-if="paperArr[paperType].value==customStr"
+                @change="handleDraw"
+                style="width:100px"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-col>
@@ -138,15 +160,17 @@
 <script>
 import { onMounted } from "vue";
 import imageJs from "./image.js";
-import {paperArr, typeArr} from "./constants.js";
+import {paperArr, typeArr, customStr} from "./constants.js";
 export default {
   setup() {
     const size = ref(1.5);//方格大小
-    const color = ref("rgba(31, 31, 31, 1)");
+    const color = ref("rgba(61, 61, 61, 1)");
     const text = ref("");//标题
     const type = ref(1);//格子类型
     const paperType = ref(0)//纸张大小
     const transition = ref(1)//过渡比例
+    const width = ref(21)//自定义宽
+    const height = ref(29.7)//自定义高
     const transitionTooltip = "仅适用于田字格，该选项代表田字格占多少比例，剩余部分为方格，作为过渡。"
     const { drawImg, downloadImg, downloadPDF } = imageJs(
       size,
@@ -154,7 +178,9 @@ export default {
       text,
       type,
       paperType,
-      transition
+      transition,
+      width,
+      height
     );
 
     //画
@@ -177,6 +203,15 @@ export default {
       drawImg();
     };
 
+    //变更纸张大小
+    const handleSize = () => {
+      if (paperArr[paperType.value].value != customStr) {
+        width.value = paperArr[paperType.value].width
+        height.value = paperArr[paperType.value].height
+      }
+      drawImg();
+    };
+
     onMounted(() => {
       drawImg()
     })
@@ -191,10 +226,14 @@ export default {
       paperArr,
       transition,
       transitionTooltip,
+      width,
+      height,
+      customStr,
       changeColor,
       handleDraw,
       downloadImage,
       downloadFile,
+      handleSize,
     };
   },
 };
