@@ -127,7 +127,8 @@ function imageJs( size, color, text, type, paperType,transition,customWidth,cust
     //创建pdf文件，文档：http://raw.githack.com/MrRio/jsPDF/master/docs/index.html
     // const doc = new jspdf({unit:'px', format:[cm2px(paper.height), cm2px(paper.width)]});
     //参数：单位cm，大小根据paper自定义，压缩文件大小
-    const doc = new jspdf({unit:'cm', format:[paper.height, paper.width],compress:true});
+    let orientation = paper.height<paper.width?'l':'p'
+    const doc = new jspdf({unit:'cm', format:[paper.height, paper.width],orientation:orientation,compress:true});
     
     const imageData = getImgData();
     doc.addImage(imageData, 'PNG', 0, 0, paper.width, paper.height);
