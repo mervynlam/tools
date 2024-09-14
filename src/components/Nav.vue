@@ -1,6 +1,6 @@
 <script>
-import alipay from '@/assets/img/alipay.png'
-import wechat from '@/assets/img/wechat.png'
+import alipay from "@/assets/img/alipay.png";
+import wechat from "@/assets/img/wechat.png";
 export default {
   setup() {
     const router = useRouter();
@@ -8,9 +8,7 @@ export default {
       "安全、高效的给图片加水印，没有任何网络请求，保护证件安全。"
     );
 
-    const kindle2MdTooltip = ref(
-      "在线工具将kindle笔记转markdown格式"
-    );
+    const kindle2MdTooltip = ref("在线工具将kindle笔记转markdown格式");
     const currentPage = ref(router.currentRoute.value.name);
     const donateFlag = ref(false);
 
@@ -21,7 +19,7 @@ export default {
 
     //切换功能页
     const toGithub = () => {
-      window.open("https://github.com/mervynlam/watermark");
+      window.open("https://github.com/mervynlam/tools");
     };
 
     //喝茶
@@ -72,7 +70,7 @@ export default {
           </el-icon>
         </el-tooltip>
       </el-menu-item>
-      <el-menu-item index="splice"><span>图片拼接</span></el-menu-item>
+      <!-- <el-menu-item index="splice"><span>图片拼接</span></el-menu-item>
       <el-menu-item index="kindle2md"
         ><span>Kindle Note to Markdown</span>
         <el-tooltip :content="kindle2MdTooltip" placement="bottom">
@@ -80,15 +78,8 @@ export default {
             <i-ep-warning />
           </el-icon>
         </el-tooltip>
-      </el-menu-item>
-      <el-menu-item index="drawgrids"
-        ><span>方格模板</span>
-        <el-tooltip :content="kindle2MdTooltip" placement="bottom">
-          <el-icon class="warning">
-            <i-ep-warning />
-          </el-icon>
-        </el-tooltip>
-      </el-menu-item>
+      </el-menu-item> -->
+      <el-menu-item index="drawgrids"><span>方格模板</span> </el-menu-item>
     </el-menu>
     <div class="buttons">
       <el-button type="plain" link class="button" @click="openDonate()">
@@ -107,7 +98,10 @@ export default {
     </div>
   </div>
   <div class="box-donate" v-show="donateFlag">
-    <i-ep-circle-close class="close-icon el-icon-circle-close" @click="closeDonate()"></i-ep-circle-close>
+    <i-ep-circle-close
+      class="close-icon el-icon-circle-close"
+      @click="closeDonate()"
+    ></i-ep-circle-close>
     <div class="donate-text"><span>感谢您的支持</span></div>
     <div class="donate-img">
       <el-image :src="alipay"></el-image>
@@ -168,46 +162,46 @@ export default {
 
 /* 喝茶box */
 .box-donate {
-    background-color: rgba(0, 0, 0, 0.6);
-    text-align: center;
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 100%;
-    z-index: 5000;
+  background-color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100%;
+  z-index: 5000;
 }
 
-.box-donate>.donate-img {
-    margin: 30px auto;
-    width: 90%;
-    height: 90%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.box-donate > .donate-img {
+  margin: 30px auto;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.donate-img>.el-image {
-    height: 50%;
+.donate-img > .el-image {
+  height: 50%;
 }
 
-.box-donate>.close-icon {
-    color: white;
-    font-size: 30px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 20;
+.box-donate > .close-icon {
+  color: white;
+  font-size: 30px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 20;
 }
 
 .donate-text {
-    display: flex;
-    position: fixed;
-    height: 25%;
-    justify-content: center;
-    align-items: end;
-    width: 100%;
-    color: white;
-    font-size: 25px;
+  display: flex;
+  position: fixed;
+  height: 25%;
+  justify-content: center;
+  align-items: end;
+  width: 100%;
+  color: white;
+  font-size: 25px;
 }
 </style>
