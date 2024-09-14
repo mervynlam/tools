@@ -1,0 +1,12 @@
+.menu-list {
+  .menu-item {
+    &:hover {
+      background-color: var(--blue-light);
+    }
+    &.actived {
+      background-color: var(--blue-dark);
+      color: white;
+    }
+    color: var(--gray-dark);
+  }
+}

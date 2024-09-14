@@ -1,33 +1,29 @@
 {
-  "name": "my-vue-app",
-  "private": true,
+  "name": "tools_re",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.0.9",
-    "element-plus": "2.1.10",
-    "jspdf": "^2.5.1",
-    "marked": "^4.1.1",
-    "prettier": "^3.3.3",
-    "typescript": "^4.8.3",
-    "typescript-eslint": "^0.0.1-alpha.0",
-    "vue": "^3.2.37",
-    "vue-router": "4"
+    "@varlet/ui": "^3.4.0",
+    "pinia": "^2.2.2",
+    "sass-embedded": "^1.78.0",
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3"
   },
   "devDependencies": {
-    "@iconify/json": "^2.1.105",
-    "@vitejs/plugin-vue": "^3.0.3",
-    "@vue/compiler-sfc": "^3.2.39",
-    "unplugin-auto-import": "^0.11.2",
-    "unplugin-icons": "^0.14.9",
-    "unplugin-vue-components": "^0.22.4",
-    "vite": "^3.0.7"
-  },
-  "main": "index.html",
-  "license": "MIT"
+    "@rushstack/eslint-patch": "^1.8.0",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "prettier": "^3.2.5",
+    "vite": "^5.3.1"
+  }
 }
