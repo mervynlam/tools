@@ -5,5 +5,5 @@ const value = ref(3)
 </script>
 
 <template>
-  <var-slider v-model="value" />
+  <main></main>
 </template>

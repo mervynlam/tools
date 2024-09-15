@@ -13,19 +13,17 @@ const handleToolClick = (path) => {
     <span class="h1">Welcome to Mervyn's Tools</span>
     <div class="d-flex w-100 flex-center gap-8 flex-wrap">
       <div
-        class="w-20 h-150px bg-white rounded-lg p-4 cursor-pointer card-item"
+        class="w-20 h-150px bg-white rounded-lg p-4 cursor-pointer card-item d-flex flex-column gap-3"
         v-for="tool in pages.filter((item) => item.isTool)"
         :key="tool.path"
         @click="handleToolClick(tool.path)"
       >
-        <var-space class="d-flex flex-column">
-          <span class="fs-1-2">
-            {{ tool.name }}
-          </span>
-          <span class="text-black-50">
-            {{ tool.description }}
-          </span>
-        </var-space>
+        <span class="fs-1-2">
+          {{ tool.name }}
+        </span>
+        <span class="text-black-50">
+          {{ tool.description }}
+        </span>
       </div>
     </div>
   </div>

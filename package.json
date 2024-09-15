@@ -11,7 +11,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@varlet/ui": "^3.4.0",
     "pinia": "^2.2.2",
     "sass-embedded": "^1.78.0",
     "vue": "^3.4.29",
@@ -19,10 +18,12 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
+    "@vicons/ionicons4": "^0.12.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
+    "naive-ui": "^2.39.0",
     "prettier": "^3.2.5",
     "vite": "^5.3.1"
   }

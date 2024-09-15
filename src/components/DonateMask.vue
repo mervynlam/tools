@@ -4,6 +4,8 @@ import wechat from '@/assets/img/wechat.png'
 
 import { useGlobalStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { NImage, NIcon, NButton } from 'naive-ui'
+import { IosClose } from '@vicons/ionicons4'
 const store = useGlobalStore()
 const { donateIsShow } = storeToRefs(store)
 const handleClose = () => {
@@ -17,12 +19,12 @@ const handleClose = () => {
   >
     <span class="h2 text-white">感谢您的赞助</span>
     <div class="d-flex">
-      <var-image width="500px" height="500px" :src="alipay" />
-      <var-image width="500px" height="500px" :src="wechat" />
+      <n-image width="500px" height="500px" :src="alipay" />
+      <n-image width="500px" height="500px" :src="wechat" />
     </div>
 
-    <var-button text round @click="handleClose">
-      <var-icon name="close-circle-outline" color="var(--white)" size="30" />
-    </var-button>
+    <n-button text @click="handleClose">
+      <n-icon color="var(--white)" size="30" :component="IosClose" />
+    </n-button>
   </div>
 </template>

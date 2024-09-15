@@ -8,7 +8,7 @@ import { RouterView } from 'vue-router'
     <AppNavigator />
     <main class="flex-fill d-flex flex-column">
       <AppHeader />
-      <main class="w-100 h-100 bg-blue-lightest p-3">
+      <main class="w-100 h-100 bg-blue-lightest p-3 overflow-auto">
         <RouterView />
       </main>
     </main>

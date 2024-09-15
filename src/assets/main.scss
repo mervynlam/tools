@@ -1,5 +1,6 @@
 .menu-list {
   .menu-item {
+    color: var(--gray-dark);
     &:hover {
       background-color: var(--blue-light);
     }
@@ -7,6 +8,5 @@
       background-color: var(--blue-dark);
       color: white;
     }
-    color: var(--gray-dark);
   }
 }
