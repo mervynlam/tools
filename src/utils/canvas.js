@@ -19,3 +19,9 @@ export const getFontContext = (canvas, options) => {
 
   return fontCtx
 }
+
+export const getCanvasDataUrl = (canvas) => {
+  if (!canvas) return ''
+  const imageData = canvas.toDataURL('image/png')
+  return imageData
+}

@@ -1,11 +1,13 @@
 <script setup>
 import { nextTick, reactive, watch } from 'vue'
-import { NInput, NIcon } from 'naive-ui'
+import { NInput, NIcon, NImage, NButton } from 'naive-ui'
 import SettingSlider from '@/components/settingItems/SettingSlider.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
 import UploadFile from './UploadFile.vue'
-import { MdSearch, MdDownload } from '@vicons/ionicons4'
-import { drawImg, getFontContext } from '@/utils/canvas'
+import { MdSearch, MdDownload, IosClose } from '@vicons/ionicons4'
+import { drawImg, getCanvasDataUrl, getFontContext } from '@/utils/canvas'
+import moment from 'moment'
+import { downloadImage } from '@/utils/download'
 
 const imageList = reactive([])
 const config = reactive({
@@ -15,6 +17,10 @@ const config = reactive({
   space: 2,
   colSpace: 2,
   color: 'rgba(149,149,149, 0.5)'
+})
+const preview = reactive({
+  show: false,
+  url: ''
 })
 
 const idPrefix = 'water_mark_canvas_'
@@ -91,6 +97,34 @@ const getCanvas = (index) => {
   canvasList[index] ??= document.getElementById(idPrefix + index)
   return canvasList[index]
 }
+
+const handlePreviewClick = (index) => {
+  const url = getCanvasDataUrl(getCanvas(index))
+  preview.show = true
+  preview.url = url
+}
+
+const handlePreviewClose = () => {
+  preview.show = false
+  preview.url = ''
+}
+
+const handleDownloadClick = (index) => {
+  const url = getCanvasDataUrl(getCanvas(index))
+  const { name } = imageList[index]
+  const filename = generateFileName(name)
+  downloadImage(filename, url)
+}
+
+const generateFileName = (originName) => {
+  const extIndex = originName.lastIndexOf('.')
+  return (
+    originName.substring(0, extIndex >= 0 ? extIndex : originName.length) +
+    '_' +
+    moment().format('YYYYMMDDHHmmssSSS') +
+    '.png'
+  )
+}
 </script>
 <template>
   <div class="d-flex flex-column gap-3">
@@ -141,14 +175,35 @@ const getCanvas = (index) => {
     >
       <canvas :id="idPrefix + index" class="mw-100 mh-100"></canvas>
       <div class="shadow w-100 h-100 bg-black-50 position-absolute top-0 left-0 flex-center gap-6">
-        <div class="cursor-pointer rounded-lg button d-flex flex-center">
+        <div
+          class="cursor-pointer rounded-lg button d-flex flex-center"
+          @click="handlePreviewClick(index)"
+        >
           <n-icon size="60" :component="MdSearch" />
         </div>
-        <div class="cursor-pointer rounded-lg button d-flex flex-center">
+        <div
+          class="cursor-pointer rounded-lg button d-flex flex-center"
+          @click="handleDownloadClick(index)"
+        >
           <n-icon size="60" :component="MdDownload" />
         </div>
       </div>
     </div>
+  </div>
+  <div
+    class="position-fixed w-100 vh-100 bg-black-50 top-0 left-0 d-flex flex-center flex-column gap-3"
+    v-if="preview.show"
+  >
+    <n-image
+      class="h-75 mw-100 justify-content-center"
+      objectFit="contain"
+      :src="preview.url"
+      :preview-disabled="true"
+    />
+
+    <n-button text @click="handlePreviewClose">
+      <n-icon color="var(--white)" size="30" :component="IosClose" />
+    </n-button>
   </div>
 </template>
 
