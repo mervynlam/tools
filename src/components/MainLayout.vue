@@ -9,7 +9,7 @@ import { RouterView } from 'vue-router'
     <main class="flex-fill d-flex flex-column">
       <AppHeader />
       <main class="w-100 h-100 bg-blue-lightest p-3 overflow-auto d-flex justify-content-center">
-        <div class="mw-1800px">
+        <div class="mw-1800px flex-fill">
           <RouterView />
         </div>
       </main>

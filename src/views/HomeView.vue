@@ -9,11 +9,11 @@ const handleToolClick = (path) => {
 </script>
 
 <template>
-  <div class="d-flex flex-column flex-center gap-10 h-100">
+  <div class="d-flex flex-column flex-center gap-10 h-100 w-100">
     <span class="h1">Welcome to Mervyn's Tools</span>
     <div class="d-flex w-100 flex-center gap-8 flex-wrap">
       <div
-        class="w-20 h-150px bg-white rounded-lg p-4 cursor-pointer card-item d-flex flex-column gap-3"
+        class="min-w-300px w-20 h-150px bg-white rounded-lg p-4 cursor-pointer card-item d-flex flex-column gap-3"
         v-for="tool in pages.filter((item) => item.isTool)"
         :key="tool.path"
         @click="handleToolClick(tool.path)"

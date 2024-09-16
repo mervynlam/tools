@@ -979,11 +979,6 @@
 }
 
 /* flex */
-.flex-fill {
-  flex: 1 1 auto;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
-}
 
 .flex-center {
   align-items: center;
