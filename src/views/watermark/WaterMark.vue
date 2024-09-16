@@ -127,10 +127,10 @@ const generateFileName = (originName) => {
 }
 </script>
 <template>
-  <div class="d-flex flex-column gap-3">
+  <div class="d-flex flex-column gap-8">
     <upload-file @change-file-list="handleFileChange" />
-    <n-input round v-model:value="config.words" placeholder="水印文字" />
-    <div class="d-flex gap-4 flex-wrap settings">
+    <n-input round v-model:value="config.words" placeholder="水印文字" size="large" />
+    <div class="d-flex gap-8 flex-wrap justify-content-center settings">
       <setting-slider
         classname="item"
         v-model:value="config.size"
@@ -166,26 +166,28 @@ const generateFileName = (originName) => {
       />
       <setting-color classname="item" v-model:value="config.color" label="颜色" />
     </div>
-  </div>
-  <div class="d-flex flex-wrap image-list gap-4">
-    <div
-      v-for="(image, index) in imageList"
-      :key="image.name"
-      class="image-item h-300px position-relative d-flex flex-center"
-    >
-      <canvas :id="idPrefix + index" class="mw-100 mh-100"></canvas>
-      <div class="shadow w-100 h-100 bg-black-50 position-absolute top-0 left-0 flex-center gap-6">
+    <div class="d-flex flex-wrap image-list gap-4">
+      <div
+        v-for="(image, index) in imageList"
+        :key="image.name"
+        class="image-item h-300px position-relative d-flex flex-center"
+      >
+        <canvas :id="idPrefix + index" class="mw-100 mh-100"></canvas>
         <div
-          class="cursor-pointer rounded-lg button d-flex flex-center"
-          @click="handlePreviewClick(index)"
+          class="shadow w-100 h-100 bg-black-50 position-absolute top-0 left-0 flex-center gap-6"
         >
-          <n-icon size="60" :component="MdSearch" />
-        </div>
-        <div
-          class="cursor-pointer rounded-lg button d-flex flex-center"
-          @click="handleDownloadClick(index)"
-        >
-          <n-icon size="60" :component="MdDownload" />
+          <div
+            class="cursor-pointer rounded-lg button d-flex flex-center"
+            @click="handlePreviewClick(index)"
+          >
+            <n-icon size="60" :component="MdSearch" />
+          </div>
+          <div
+            class="cursor-pointer rounded-lg button d-flex flex-center"
+            @click="handleDownloadClick(index)"
+          >
+            <n-icon size="60" :component="MdDownload" />
+          </div>
         </div>
       </div>
     </div>
@@ -210,7 +212,8 @@ const generateFileName = (originName) => {
 <style lang="scss" scoped>
 .settings {
   .item {
-    flex: 0 0 calc(50% - 1rem);
+    flex: 0 0 calc(50% - 2rem);
+    min-width: 600px;
   }
 }
 
