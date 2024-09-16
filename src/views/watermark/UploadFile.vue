@@ -1,28 +1,11 @@
 <script setup>
 import { NUpload, NUploadDragger, NIcon } from 'naive-ui'
 import { MdCloudUpload } from '@vicons/ionicons4'
-import { reactive } from 'vue'
 
-import { useGlobalStore } from '@/store'
+const emit = defineEmits(['before-upload'])
 
-const store = useGlobalStore()
-const emit = defineEmits(['change-file-list'])
-
-const imageList = reactive({
-  set: new Set(),
-  list: []
-})
-const handleBeforeUpload = ({ file }) => {
-  const { name, size } = file.file
-  const uid = name + size
-  if (imageList.set.has(uid)) {
-    store.open_error_message(`图片${name}已存在`)
-    return false
-  }
-  imageList.set.add(uid)
-  imageList.list.push(file)
-
-  emit('change-file-list', imageList.list)
+const handleBeforeUpload = (file) => {
+  emit('before-upload', file)
   return false
 }
 </script>

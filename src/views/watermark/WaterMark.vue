@@ -9,6 +9,9 @@ import { drawImg, getCanvasDataUrl, getFontContext } from '@/utils/canvas'
 import moment from 'moment'
 import { downloadImage } from '@/utils/download'
 import { debounce } from 'lodash'
+import { useGlobalStore } from '@/store'
+
+const store = useGlobalStore()
 
 const initConfig = {
   words: '',
@@ -19,7 +22,10 @@ const initConfig = {
   color: 'rgba(149,149,149, 0.5)'
 }
 
-const imageList = reactive([])
+const imageList = reactive({
+  set: new Set(),
+  list: []
+})
 const config = reactive({ ...initConfig })
 const preview = reactive({
   show: false,
@@ -47,7 +53,7 @@ const draw = () => {
 }
 
 const drawThumbnail = () => {
-  imageList.forEach(({ file }, index) => {
+  imageList.list.forEach(({ file }, index) => {
     const fileReader = new FileReader()
     fileReader.onload = (e) => {
       const img = new Image()
@@ -111,18 +117,31 @@ const generateFileName = (originName) => {
 }
 
 const setConfig = (targetConfig) => {
-  console.log('config: ', config)
   config.words = targetConfig?.words ?? config.words
   config.size = targetConfig?.size ?? config.size
   config.angle = targetConfig?.angle ?? config.angle
   config.rowSpace = targetConfig?.rowSpace ?? config.rowSpace
   config.colSpace = targetConfig?.colSpace ?? config.colSpace
   config.color = targetConfig?.color ?? config.color
-  console.log('config: ', config)
 }
 
 const handleFileChange = (fileList) => {
-  imageList.splice(0, imageList.length, ...fileList)
+  imageList.list.splice(0, imageList.length, ...fileList)
+
+  nextTick(() => {
+    draw()
+  })
+}
+
+const handleBeforeUpload = ({ file }) => {
+  const { name, size } = file.file
+  const uid = name + size
+  if (imageList.set.has(uid)) {
+    store.open_error_message(`图片${name}已存在`)
+    return false
+  }
+  imageList.set.add(uid)
+  imageList.list.push(file)
   nextTick(() => {
     draw()
   })
@@ -141,13 +160,13 @@ const handlePreviewClose = () => {
 
 const handleDownloadClick = (index) => {
   const url = getCanvasDataUrl(getCanvas(index))
-  const { name } = imageList[index]
+  const { name } = imageList.list[index]
   const filename = generateFileName(name)
   downloadImage(filename, url)
 }
 
 const handleClearList = () => {
-  imageList.splice(0, imageList.length)
+  imageList.list.splice(0, imageList.list.length)
 }
 
 const handleResetConfig = () => {
@@ -155,7 +174,7 @@ const handleResetConfig = () => {
 }
 
 const handleBatchDownload = () => {
-  imageList.forEach((_, index) => {
+  imageList.list.forEach((_, index) => {
     handleDownloadClick(index)
   })
 }
@@ -163,12 +182,13 @@ const handleBatchDownload = () => {
 onMounted(() => {
   const configStr = localStorage.getItem(storeKey)
   const config = JSON.parse(configStr)
+  delete config.words
   setConfig(config)
 })
 </script>
 <template>
   <div class="d-flex flex-column gap-8 align-items-center">
-    <upload-file @change-file-list="handleFileChange" />
+    <upload-file @change-file-list="handleFileChange" @before-upload="handleBeforeUpload" />
     <n-input round v-model:value="config.words" placeholder="水印文字" size="large" />
     <div class="d-flex gap-8 flex-wrap justify-content-center settings">
       <setting-slider
@@ -206,15 +226,15 @@ onMounted(() => {
       />
       <setting-color classname="item" v-model:value="config.color" label="颜色" />
     </div>
-    <n-button-group v-if="imageList.length > 0">
+    <n-button-group v-if="imageList.list.length > 0">
       <n-button type="primary" size="medium" @click="handleClearList" round>清空图片</n-button>
       <n-button type="primary" size="medium" @click="handleResetConfig">恢复配置</n-button>
       <n-button type="primary" size="medium" @click="handleBatchDownload" round>批量下载</n-button>
     </n-button-group>
 
-    <div class="d-flex flex-wrap image-list gap-4">
+    <div class="d-flex flex-wrap image-list gap-4 w-100">
       <div
-        v-for="(image, index) in imageList"
+        v-for="(image, index) in imageList.list"
         :key="image.name"
         class="image-item h-300px position-relative d-flex flex-center"
       >
