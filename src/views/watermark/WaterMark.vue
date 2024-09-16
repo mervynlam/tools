@@ -1,6 +1,6 @@
 <script setup>
-import { nextTick, reactive, watch } from 'vue'
-import { NInput, NIcon, NImage, NButton } from 'naive-ui'
+import { nextTick, onMounted, reactive, watch } from 'vue'
+import { NInput, NIcon, NImage, NButton, NButtonGroup } from 'naive-ui'
 import SettingSlider from '@/components/settingItems/SettingSlider.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
 import UploadFile from './UploadFile.vue'
@@ -8,36 +8,38 @@ import { MdSearch, MdDownload, IosClose } from '@vicons/ionicons4'
 import { drawImg, getCanvasDataUrl, getFontContext } from '@/utils/canvas'
 import moment from 'moment'
 import { downloadImage } from '@/utils/download'
+import { debounce } from 'lodash'
 
-const imageList = reactive([])
-const config = reactive({
+const initConfig = {
   words: '',
   size: 25,
   angle: 45,
-  space: 2,
+  rowSpace: 2,
   colSpace: 2,
   color: 'rgba(149,149,149, 0.5)'
-})
+}
+
+const imageList = reactive([])
+const config = reactive({ ...initConfig })
 const preview = reactive({
   show: false,
   url: ''
 })
 
 const idPrefix = 'water_mark_canvas_'
+const storeKey = 'water_mark_config'
 const canvasList = []
 
-watch(config, () => {
-  nextTick(() => {
-    draw()
-  })
-})
+const saveStore = debounce((config) => {
+  localStorage.setItem(storeKey, JSON.stringify(config))
+}, 300)
 
-const handleFileChange = (fileList) => {
-  imageList.splice(0, imageList.length, ...fileList)
+watch(config, (newValue) => {
   nextTick(() => {
     draw()
   })
-}
+  saveStore(newValue)
+})
 
 const draw = () => {
   drawThumbnail()
@@ -75,7 +77,7 @@ const drawMark = (canvas) => {
   //由于可旋转角度，取宽高较大值乘一定数额，避免空白
   const maxWidth = Math.max(canvas.width, canvas.height) * 1.8
   //行数
-  const row = Math.ceil(maxWidth / (textSize + textSize * config.space))
+  const row = Math.ceil(maxWidth / (textSize + textSize * config.rowSpace))
 
   //列数
   const col = Math.ceil(maxWidth / (textWidth + textSize * config.colSpace))
@@ -88,7 +90,7 @@ const drawMark = (canvas) => {
       fontCtx.fillText(
         config.words,
         (textWidth + textSize * config.colSpace) * j - offset,
-        (textSize + textSize * config.space) * i
+        (textSize + textSize * config.rowSpace) * i
       )
     }
   }
@@ -96,6 +98,34 @@ const drawMark = (canvas) => {
 const getCanvas = (index) => {
   canvasList[index] ??= document.getElementById(idPrefix + index)
   return canvasList[index]
+}
+
+const generateFileName = (originName) => {
+  const extIndex = originName.lastIndexOf('.')
+  return (
+    originName.substring(0, extIndex >= 0 ? extIndex : originName.length) +
+    '_' +
+    moment().format('YYYYMMDDHHmmssSSS') +
+    '.png'
+  )
+}
+
+const setConfig = (targetConfig) => {
+  console.log('config: ', config)
+  config.words = targetConfig?.words ?? config.words
+  config.size = targetConfig?.size ?? config.size
+  config.angle = targetConfig?.angle ?? config.angle
+  config.rowSpace = targetConfig?.rowSpace ?? config.rowSpace
+  config.colSpace = targetConfig?.colSpace ?? config.colSpace
+  config.color = targetConfig?.color ?? config.color
+  console.log('config: ', config)
+}
+
+const handleFileChange = (fileList) => {
+  imageList.splice(0, imageList.length, ...fileList)
+  nextTick(() => {
+    draw()
+  })
 }
 
 const handlePreviewClick = (index) => {
@@ -116,18 +146,28 @@ const handleDownloadClick = (index) => {
   downloadImage(filename, url)
 }
 
-const generateFileName = (originName) => {
-  const extIndex = originName.lastIndexOf('.')
-  return (
-    originName.substring(0, extIndex >= 0 ? extIndex : originName.length) +
-    '_' +
-    moment().format('YYYYMMDDHHmmssSSS') +
-    '.png'
-  )
+const handleClearList = () => {
+  imageList.splice(0, imageList.length)
 }
+
+const handleResetConfig = () => {
+  setConfig(initConfig)
+}
+
+const handleBatchDownload = () => {
+  imageList.forEach((_, index) => {
+    handleDownloadClick(index)
+  })
+}
+
+onMounted(() => {
+  const configStr = localStorage.getItem(storeKey)
+  const config = JSON.parse(configStr)
+  setConfig(config)
+})
 </script>
 <template>
-  <div class="d-flex flex-column gap-8">
+  <div class="d-flex flex-column gap-8 align-items-center">
     <upload-file @change-file-list="handleFileChange" />
     <n-input round v-model:value="config.words" placeholder="水印文字" size="large" />
     <div class="d-flex gap-8 flex-wrap justify-content-center settings">
@@ -148,7 +188,7 @@ const generateFileName = (originName) => {
       />
       <setting-slider
         classname="item"
-        v-model:value="config.space"
+        v-model:value="config.rowSpace"
         label="行间距"
         :min="0"
         :max="5"
@@ -166,6 +206,12 @@ const generateFileName = (originName) => {
       />
       <setting-color classname="item" v-model:value="config.color" label="颜色" />
     </div>
+    <n-button-group v-if="imageList.length > 0">
+      <n-button type="primary" size="medium" @click="handleClearList" round>清空图片</n-button>
+      <n-button type="primary" size="medium" @click="handleResetConfig">恢复配置</n-button>
+      <n-button type="primary" size="medium" @click="handleBatchDownload" round>批量下载</n-button>
+    </n-button-group>
+
     <div class="d-flex flex-wrap image-list gap-4">
       <div
         v-for="(image, index) in imageList"
