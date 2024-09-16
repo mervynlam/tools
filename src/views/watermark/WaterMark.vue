@@ -21,6 +21,8 @@ const initConfig = {
   colSpace: 2,
   color: 'rgba(149,149,149, 0.5)'
 }
+const sizeLimit = 10
+const amountLimit = 10
 
 const imageList = reactive({
   set: new Set(),
@@ -125,16 +127,19 @@ const setConfig = (targetConfig) => {
   config.color = targetConfig?.color ?? config.color
 }
 
-const handleFileChange = (fileList) => {
-  imageList.list.splice(0, imageList.length, ...fileList)
-
-  nextTick(() => {
-    draw()
-  })
-}
-
 const handleBeforeUpload = ({ file }) => {
   const { name, size } = file.file
+
+  if (imageList.list.length >= amountLimit) {
+    store.open_error_message(`${file.name} 添加失败，图片数量达到上限 ${amountLimit} 张。`)
+    return false
+  }
+
+  if (size > sizeLimit * 1024 * 1024) {
+    store.open_error_message(`${file.name} 超过 ${sizeLimit}M，添加失败。`)
+    return false
+  }
+
   const uid = name + size
   if (imageList.set.has(uid)) {
     store.open_error_message(`图片${name}已存在`)
@@ -142,6 +147,7 @@ const handleBeforeUpload = ({ file }) => {
   }
   imageList.set.add(uid)
   imageList.list.push(file)
+
   nextTick(() => {
     draw()
   })
@@ -167,6 +173,8 @@ const handleDownloadClick = (index) => {
 
 const handleClearList = () => {
   imageList.list.splice(0, imageList.list.length)
+  imageList.set.clear()
+  canvasList.splice(0, canvasList.length)
 }
 
 const handleResetConfig = () => {
@@ -188,7 +196,11 @@ onMounted(() => {
 </script>
 <template>
   <div class="d-flex flex-column gap-8 align-items-center">
-    <upload-file @change-file-list="handleFileChange" @before-upload="handleBeforeUpload" />
+    <upload-file
+      @before-upload="handleBeforeUpload"
+      :size-limit="sizeLimit"
+      :amount-limit="amountLimit"
+    />
     <n-input round v-model:value="config.words" placeholder="水印文字" size="large" />
     <div class="d-flex gap-8 flex-wrap justify-content-center settings">
       <setting-slider
