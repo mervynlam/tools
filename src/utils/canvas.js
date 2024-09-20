@@ -7,7 +7,7 @@ export const drawImg = (canvas, image) => {
 }
 
 export const getFontContext = (canvas, options) => {
-  const { size, color, rotate } = options
+  const { size, color, rotate = 0 } = options
 
   const fontCtx = canvas.getContext('2d')
   fontCtx.font =
@@ -24,4 +24,30 @@ export const getCanvasDataUrl = (canvas) => {
   if (!canvas) return ''
   const imageData = canvas.toDataURL('image/png')
   return imageData
+}
+
+export const drawRect = (ctx, color, lineWidth, x, y, w, h) => {
+  ctx.strokeStyle = color
+  ctx.lineWidth = lineWidth
+  ctx.strokeRect(x, y, w, h)
+  ctx.stroke()
+}
+
+export const drawLine = (ctx, color, width, startX, startY, endX, endY, dottedDash = []) => {
+  ctx.strokeStyle = color
+  ctx.lineWidth = width
+  if (dottedDash.length > 0) {
+    ctx.setLineDash(dottedDash)
+  }
+  ctx.beginPath()//加上这个大大提升性能，gpt说如果不调用 beginPath，所有的路径都会被合并在一起，导致性能降低，并且可能影响绘制效果。
+  ctx.moveTo(startX, startY)
+  ctx.lineTo(endX, endY)
+  ctx.stroke()
+}
+
+export const drawText = (canvas, text, color, x, y) => {
+  const fontCtx = getFontContext(canvas, { size: '50', color })
+  fontCtx.textAlign = 'center'
+  fontCtx.textBaseline = 'middle'
+  fontCtx.fillText(text, x, y)
 }

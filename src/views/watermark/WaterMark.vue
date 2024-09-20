@@ -1,6 +1,7 @@
 <script setup>
 import { nextTick, onMounted, reactive, watch } from 'vue'
 import { NInput, NIcon, NImage, NButton, NButtonGroup } from 'naive-ui'
+import SettingInput from '@/components/settingItems/SettingInput.vue'
 import SettingSlider from '@/components/settingItems/SettingSlider.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
 import UploadFile from './UploadFile.vue'
@@ -10,6 +11,7 @@ import moment from 'moment'
 import { downloadImage } from '@/utils/download'
 import { debounce } from 'lodash'
 import { useGlobalStore } from '@/store'
+import { setConfig } from '@/utils/utils'
 
 const store = useGlobalStore()
 
@@ -118,15 +120,6 @@ const generateFileName = (originName) => {
   )
 }
 
-const setConfig = (targetConfig) => {
-  config.words = targetConfig?.words ?? config.words
-  config.size = targetConfig?.size ?? config.size
-  config.angle = targetConfig?.angle ?? config.angle
-  config.rowSpace = targetConfig?.rowSpace ?? config.rowSpace
-  config.colSpace = targetConfig?.colSpace ?? config.colSpace
-  config.color = targetConfig?.color ?? config.color
-}
-
 const handleBeforeUpload = ({ file }) => {
   const { name, size } = file.file
 
@@ -178,7 +171,7 @@ const handleClearList = () => {
 }
 
 const handleResetConfig = () => {
-  setConfig(initConfig)
+  setConfig(initConfig, config)
 }
 
 const handleBatchDownload = () => {
@@ -189,9 +182,9 @@ const handleBatchDownload = () => {
 
 onMounted(() => {
   const configStr = localStorage.getItem(storeKey)
-  const config = JSON.parse(configStr)
-  delete config.words
-  setConfig(config)
+  const storeConfig = JSON.parse(configStr)
+  delete storeConfig.words
+  setConfig(storeConfig, config)
 })
 </script>
 <template>
@@ -201,7 +194,7 @@ onMounted(() => {
       :size-limit="sizeLimit"
       :amount-limit="amountLimit"
     />
-    <n-input round v-model:value="config.words" placeholder="水印文字" size="large" />
+    <setting-input class="w-100" v-model:value="config.words" placeholder="水印文字" size="large" />
     <div class="d-flex gap-8 flex-wrap justify-content-center settings">
       <setting-slider
         classname="item"
