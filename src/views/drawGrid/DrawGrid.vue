@@ -4,10 +4,13 @@ import SettingSlider from '@/components/settingItems/SettingSlider.vue'
 import SettingInput from '@/components/settingItems/SettingInput.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
 import SettingRadio from '@/components/settingItems/SettingRadio.vue'
+import { NSwitch, NButton } from 'naive-ui'
+import { NInputNumber } from 'naive-ui'
 import { styleArr, paperArr, customPaper } from './constants'
 import { cm2px, setConfig } from '@/utils/utils'
-import { drawLine, drawRect, drawText } from '@/utils/canvas'
+import { drawLine, drawRect, drawText, getCanvasDataUrl } from '@/utils/canvas'
 import { debounce } from 'lodash'
+import { downloadPDF } from '@/utils/download'
 
 const canvasId = 'grid_canvas'
 const storeKey = 'grid_config'
@@ -15,15 +18,16 @@ const storeKey = 'grid_config'
 const config = reactive({
   size: 1.5,
   title: '',
-  titlePosition: 0.75, //TODO
-  titleSize: 50, //TODO
+  titlePosition: 0.75,
+  titleSize: 50,
   style: 'tian',
   color: 'rgba(61, 61, 61, 1)',
   paper: 'A4',
   width: 21,
   height: 29.7,
   transition: 1,
-  pageSpace: 1.5 //TODO
+  pageSpace: 1.5,
+  transpose: false
 })
 
 onMounted(() => {
@@ -63,8 +67,12 @@ const draw = () => {
   const ctx = canvas.getContext('2d')
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  const widthPx = cm2px(config.width)
-  const heightPx = cm2px(config.height)
+  //转置
+  const realWidth = config.transpose ? config.height : config.width
+  const realHeight = config.transpose ? config.width : config.height
+
+  const widthPx = cm2px(realWidth)
+  const heightPx = cm2px(realHeight)
 
   canvas.width = widthPx
   canvas.height = heightPx
@@ -74,12 +82,12 @@ const draw = () => {
   ctx.fillRect(0, 0, widthPx, heightPx)
 
   //格子数量
-  const horizontalNum = Math.floor((config.width - 2 * config.pageSpace) / config.size)
-  const verticalNum = Math.floor((config.height - 2 * config.pageSpace) / config.size)
+  const horizontalNum = Math.floor((realWidth - 2 * config.pageSpace) / config.size)
+  const verticalNum = Math.floor((realHeight - 2 * config.pageSpace) / config.size)
 
   //边距(cm)
-  const hSpace = ((config.width - horizontalNum * config.size) / 2).toFixed(2)
-  const vSpace = ((config.height - verticalNum * config.size) / 2).toFixed(2)
+  const hSpace = ((realWidth - horizontalNum * config.size) / 2).toFixed(2)
+  const vSpace = ((realHeight - verticalNum * config.size) / 2).toFixed(2)
   const hSpacePx = cm2px(hSpace)
   const vSpacePx = cm2px(vSpace)
   const sizePx = cm2px(config.size)
@@ -113,7 +121,14 @@ const draw = () => {
     },
     drawTitle: () => {
       //标题
-      drawText(canvas, config.title, config.color, widthPx / 2, vSpacePx * config.titlePosition)
+      drawText(
+        canvas,
+        config.title,
+        config.titleSize,
+        config.color,
+        widthPx / 2,
+        vSpacePx * config.titlePosition
+      )
     },
     drawHorizontal: () => {
       for (let i = vSpacePx + sizePx, j = 0; j < verticalNum; i += sizePx, j++) {
@@ -206,14 +221,46 @@ const draw = () => {
   }
 }
 
+const handleDownloadPdf = () => {
+  const realWidth = config.transpose ? config.height : config.width
+  const realHeight = config.transpose ? config.width : config.height
+  const url = getCanvasDataUrl(getCanvas())
+  const fileName = getFileName(realWidth, realHeight)
+  downloadPDF(realWidth, realHeight, url, fileName)
+}
+const getFileName = (realWidth, realHeight) => {
+  const fileName = []
+  if (config.title) {
+    fileName.push(config.title)
+  }
+  fileName.push(config.paper)
+  if (config.paper === 'costom') {
+    fileName.push(`${realWidth}_${realHeight}`)
+  }
+  fileName.push(styleArr.filter((item) => item.value === config.style).at(0).label)
+  fileName.push(config.size)
+  if (config.style === 'tian' && config.transition !== 1) {
+    fileName.push(config.transition)
+  }
+  return fileName.join('_')
+}
+
 const getCanvas = () => {
   return document.getElementById(canvasId)
 }
 </script>
 
 <template>
-  <div class="d-flex flex-column align-items-center h-100">
+  <div class="d-flex flex-column align-items-center gap-10 h-100">
     <div class="d-flex flex-wrap justify-content-center settings gap-8 w-100">
+      <setting-slider
+        class="item"
+        v-model:value="config.pageSpace"
+        label="边距"
+        :min="0"
+        :max="Math.floor(Math.min(config.height, config.width) / 2)"
+        :step="0.1"
+      />
       <setting-slider
         class="item"
         v-model:value="config.size"
@@ -229,6 +276,24 @@ const getCanvas = () => {
         size="large"
         placeholder="请输入标题"
       />
+      <setting-slider
+        class="item"
+        v-model:value="config.titlePosition"
+        label="标题位置"
+        :min="0"
+        :max="1"
+        :step="0.1"
+        :tooltip="false"
+      />
+      <setting-slider
+        class="item"
+        v-model:value="config.titleSize"
+        label="标题大小"
+        :min="15"
+        :max="100"
+        :step="1"
+        :tooltip="false"
+      />
       <setting-radio class="item" label="样式" v-model:value="config.style" :options="styleArr" />
       <setting-color class="item" v-model:value="config.color" label="颜色" />
       <setting-radio
@@ -239,7 +304,36 @@ const getCanvas = () => {
           ...paperArr.map((item) => ({ label: item.value, value: item.value })),
           customPaper
         ]"
-      />
+      >
+        <div>
+          <n-switch v-model:value="config.transpose">
+            <template #checked>{{ checkedLabel ?? '转置' }}</template>
+            <template #unchecked>{{ uncheckedLabel ?? '不转置' }}</template>
+          </n-switch>
+          <div class="d-flex flex-center" v-if="config.paper === 'custom'">
+            <n-input-number
+              round
+              placeholder="宽"
+              :min="0"
+              :max="50"
+              :show-button="false"
+              v-model:value="config.width"
+              class="w-80px"
+              size="small"
+            />
+            <n-input-number
+              round
+              placeholder="高"
+              :min="0"
+              :max="50"
+              :show-button="false"
+              v-model:value="config.height"
+              class="w-80px"
+              size="small"
+            />
+          </div>
+        </div>
+      </setting-radio>
       <setting-slider
         class="item"
         label="过渡"
@@ -249,8 +343,11 @@ const getCanvas = () => {
         :step="0.05"
       />
     </div>
-    <div class="flex-fill">
-      <canvas :id="canvasId" class="w-100"></canvas>
+    <div>
+      <n-button type="primary" size="medium" @click="handleDownloadPdf" round>下载PDF</n-button>
+    </div>
+    <div class="flex-fill d-flex flex-center">
+      <canvas :id="canvasId" class="mh-1500px mw-100"></canvas>
     </div>
   </div>
 </template>

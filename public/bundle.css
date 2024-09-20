@@ -784,6 +784,10 @@
   max-width: 1800px;
 }
 
+.mh-1500px {
+  max-height: 1500px;
+}
+
 /* color */
 .bg-gray-dark {
   background-color: var(--gray-dark);
