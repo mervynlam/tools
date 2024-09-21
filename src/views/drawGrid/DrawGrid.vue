@@ -5,7 +5,7 @@ import SettingInput from '@/components/settingItems/SettingInput.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
 import SettingRadio from '@/components/settingItems/SettingRadio.vue'
 import UploadFile from '@/components/UploadFile.vue'
-import { NSwitch, NButton, NUploadDragger } from 'naive-ui'
+import { NSwitch, NButton, NUploadDragger, NButtonGroup } from 'naive-ui'
 import { NInputNumber } from 'naive-ui'
 import { styleArr, paperArr, customPaper } from './constants'
 import { cm2px, rgbStr2Rgba, setConfig } from '@/utils/utils'
@@ -283,7 +283,6 @@ const handleBeforeUpload = ({ file: fileArg }) => {
     store.open_error_message(`${file.name} 超过 1M，添加失败。`)
     return false
   }
-  note.file = file
   const fileReader = new FileReader()
   fileReader.onload = (e) => {
     const img = new Image()
@@ -291,10 +290,14 @@ const handleBeforeUpload = ({ file: fileArg }) => {
     img.onload = () => {
       const canvas = getCanvas(noteCanvasId)
       drawImg(canvas, img)
-      draw()
+      note.file = file
     }
   }
   fileReader.readAsDataURL(file)
+}
+
+const handleRemoveNote = () => {
+  note.file = null
 }
 </script>
 
@@ -392,8 +395,9 @@ const handleBeforeUpload = ({ file: fileArg }) => {
       />
       <upload-file @before-upload="handleBeforeUpload" :multiple="false">
         <n-upload-dragger class="">
-          <div class="d-flex flex-column w-100px">
+          <div class="d-flex justify-content-center w-400px gap-2">
             <span>上传小笺</span>
+            <span class="text-black-50">请选择白色背景或透明背景的图片</span>
           </div>
         </n-upload-dragger>
       </upload-file>
@@ -427,10 +431,15 @@ const handleBeforeUpload = ({ file: fileArg }) => {
         />
       </div>
       <div>
-        <n-button type="primary" size="medium" @click="handleDownloadPdf" round>下载PDF</n-button>
+        <n-button-group>
+          <n-button type="primary" size="medium" @click="handleDownloadPdf" round>下载PDF</n-button>
+          <n-button type="primary" size="medium" @click="handleRemoveNote" round v-if="note.file">
+            清除小笺
+          </n-button>
+        </n-button-group>
       </div>
     </div>
-    <div class="image-preview d-flex flex-column align-items-center overflow-auto">
+    <div class="image-preview d-flex flex-column align-items-center overflow-auto min-w-800px">
       <canvas :id="noteCanvasId" class="mh-400px mw-400px d-none"></canvas>
       <canvas :id="canvasId" class="mh-125 mw-100"></canvas>
     </div>

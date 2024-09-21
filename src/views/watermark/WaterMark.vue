@@ -191,7 +191,7 @@ onMounted(() => {
     <div class="settings d-flex flex-column align-items-center gap-6">
       <upload-file @before-upload="handleBeforeUpload">
         <n-upload-dragger class="">
-          <div class="d-flex flex-column flex-center gap-3 w-500px">
+          <div class="d-flex flex-column flex-center gap-3 w-400px">
             <n-icon size="38" :component="MdCloudUpload" :depth="3" />
             <span>点击或者拖动文件到该区域来上传</span>
             <span class="text-black-50 fs-0-8">只能上传jpg/png文件</span>
@@ -264,7 +264,7 @@ onMounted(() => {
       </n-button-group>
     </div>
 
-    <div class="image-list d-flex flex-wrap gap-4 mh-100 overflow-auto w-50">
+    <div class="image-list d-flex flex-wrap gap-4 mh-100 overflow-auto min-w-800px">
       <div
         v-for="(image, index) in imageList.list"
         :key="image.name"

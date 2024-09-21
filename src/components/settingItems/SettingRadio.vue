@@ -5,7 +5,7 @@ const { label, classname, options } = defineProps(['label', 'classname', 'option
 </script>
 <template>
   <div :class="['d-flex align-items-center gap-3', classname]">
-    <span class="text-nowrap w-10" v-if="label">{{ label }}</span>
+    <span class="text-nowrap w-15" v-if="label">{{ label }}</span>
     <n-radio-group v-model:value="value">
       <n-space size="large">
         <n-radio v-for="item in options" :key="item.value" :value="item.value">

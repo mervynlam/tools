@@ -12,7 +12,7 @@ const { label, min, max, step, classname, tooltip } = defineProps([
 </script>
 <template>
   <div :class="['d-flex align-items-center gap-3', classname]">
-    <span class="text-nowrap w-10">{{ label }}</span>
+    <span class="text-nowrap w-15">{{ label }}</span>
     <n-slider v-model:value="value" :min="min" :max="max" :step="step" :tooltip="tooltip" />
   </div>
 </template>

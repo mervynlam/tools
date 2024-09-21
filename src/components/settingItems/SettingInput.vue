@@ -10,7 +10,7 @@ const { label, classname, placeholder, size } = defineProps([
 </script>
 <template>
   <div :class="['d-flex flex-center gap-3', classname]">
-    <span class="text-nowrap w-10" v-if="label">{{ label }}</span>
+    <span class="text-nowrap w-15" v-if="label">{{ label }}</span>
     <n-input round v-model:value="value" :placeholder="placeholder" :size="size" />
   </div>
 </template>
