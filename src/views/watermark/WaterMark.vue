@@ -265,7 +265,7 @@ onMounted(() => {
       </n-button-group>
     </div>
 
-    <div class="d-flex flex-wrap image-list gap-4 mh-100 overflow-auto w-50">
+    <div class="image-list d-flex flex-wrap gap-4 mh-100 overflow-auto w-50">
       <div
         v-for="(image, index) in imageList.list"
         :key="image.name"
@@ -310,10 +310,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .settings {
-  flex: 1 1 33.33%;
+  flex: 0 0 33.33%;
 }
 .image-list {
-  flex: 2 1 66.67%;
+  flex: 0 0 66.67%;
   .image-item {
     flex: 0 0 calc(50% - 1rem);
   }

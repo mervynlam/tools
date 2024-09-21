@@ -790,6 +790,9 @@
 .mh-1500px {
   max-height: 1500px;
 }
+.mh-125 {
+  max-height: 125%;
+}
 
 /* color */
 .bg-gray-dark {

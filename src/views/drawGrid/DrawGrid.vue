@@ -13,6 +13,7 @@ import { debounce } from 'lodash'
 import { downloadPDF } from '@/utils/download'
 
 const canvasId = 'grid_canvas'
+const tempCanvasId = 'grid_canvas_temp'
 const storeKey = 'grid_config'
 
 const config = reactive({
@@ -251,10 +252,10 @@ const getCanvas = () => {
 </script>
 
 <template>
-  <div class="d-flex flex-column align-items-center gap-10 h-100">
-    <div class="d-flex flex-wrap justify-content-center settings gap-8 w-100">
+  <div class="d-flex h-100 gap-8 mw-100 justify-content-between">
+    <div class="settings d-flex flex-column align-items-center gap-6">
       <setting-slider
-        class="item"
+        class="w-100"
         v-model:value="config.pageSpace"
         label="边距"
         :min="0"
@@ -262,7 +263,7 @@ const getCanvas = () => {
         :step="0.1"
       />
       <setting-slider
-        class="item"
+        class="w-100"
         v-model:value="config.size"
         label="大小"
         :min="0.5"
@@ -270,14 +271,14 @@ const getCanvas = () => {
         :step="0.1"
       />
       <setting-input
-        class="item"
+        class="w-100"
         label="标题"
         v-model:value="config.title"
         size="large"
         placeholder="请输入标题"
       />
       <setting-slider
-        class="item"
+        class="w-100"
         v-model:value="config.titlePosition"
         label="标题位置"
         :min="0"
@@ -286,7 +287,7 @@ const getCanvas = () => {
         :tooltip="false"
       />
       <setting-slider
-        class="item"
+        class="w-100"
         v-model:value="config.titleSize"
         label="标题大小"
         :min="15"
@@ -294,10 +295,10 @@ const getCanvas = () => {
         :step="1"
         :tooltip="false"
       />
-      <setting-radio class="item" label="样式" v-model:value="config.style" :options="styleArr" />
-      <setting-color class="item" v-model:value="config.color" label="颜色" />
+      <setting-radio class="w-100" label="样式" v-model:value="config.style" :options="styleArr" />
+      <setting-color class="w-100" v-model:value="config.color" label="颜色" />
       <setting-radio
-        class="item"
+        class="w-100"
         label="纸张大小"
         v-model:value="config.paper"
         :options="[
@@ -305,7 +306,7 @@ const getCanvas = () => {
           customPaper
         ]"
       >
-        <div>
+        <div class="d-flex gap-3">
           <n-switch v-model:value="config.transpose">
             <template #checked>{{ checkedLabel ?? '转置' }}</template>
             <template #unchecked>{{ uncheckedLabel ?? '不转置' }}</template>
@@ -335,27 +336,28 @@ const getCanvas = () => {
         </div>
       </setting-radio>
       <setting-slider
-        class="item"
+        class="w-100"
         label="过渡"
         v-model:value="config.transition"
         :min="0.1"
         :max="1"
         :step="0.05"
       />
+      <div>
+        <n-button type="primary" size="medium" @click="handleDownloadPdf" round>下载PDF</n-button>
+      </div>
     </div>
-    <div>
-      <n-button type="primary" size="medium" @click="handleDownloadPdf" round>下载PDF</n-button>
-    </div>
-    <div class="flex-fill d-flex flex-center">
-      <canvas :id="canvasId" class="mh-1500px mw-100"></canvas>
+    <div class="image-preview d-flex flex-column align-items-center overflow-auto">
+      <canvas :id="canvasId" class="mh-125 mw-100"></canvas>
+      <canvas :id="tempCanvasId" class="mh-400px mw-400px d-none"></canvas>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .settings {
-  .item {
-    flex: 0 0 calc(50% - 2rem);
-    min-width: 600px;
-  }
+  flex: 0 0 33.33%;
+}
+.image-preview {
+  flex: 0 0 66.67%;
 }
 </style>
