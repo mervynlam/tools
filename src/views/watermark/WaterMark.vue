@@ -188,30 +188,35 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="d-flex flex-column gap-8 align-items-center">
-    <upload-file @before-upload="handleBeforeUpload">
-      <n-upload-dragger class="">
-        <div class="d-flex flex-column flex-center gap-3 w-500px">
-          <n-icon size="38" :component="MdCloudUpload" :depth="3" />
-          <span>点击或者拖动文件到该区域来上传</span>
-          <span class="text-black-50 fs-0-8">只能上传jpg/png文件</span>
-          <span class="text-black-50 fs-0-8">
-            文件不超过{{ sizeLimit }}M，且不超过{{ amountLimit }}张
-          </span>
-        </div>
-      </n-upload-dragger>
-    </upload-file>
-    <setting-input class="w-100" v-model:value="config.words" placeholder="水印文字" size="large" />
-    <div class="d-flex gap-8 flex-wrap justify-content-center settings">
+  <div class="d-flex gap-8 h-100 mw-100 justify-content-between">
+    <div class="settings d-flex flex-column align-items-center gap-6">
+      <upload-file @before-upload="handleBeforeUpload">
+        <n-upload-dragger class="">
+          <div class="d-flex flex-column flex-center gap-3 w-500px">
+            <n-icon size="38" :component="MdCloudUpload" :depth="3" />
+            <span>点击或者拖动文件到该区域来上传</span>
+            <span class="text-black-50 fs-0-8">只能上传jpg/png文件</span>
+            <span class="text-black-50 fs-0-8">
+              文件不超过{{ sizeLimit }}M，且不超过{{ amountLimit }}张
+            </span>
+          </div>
+        </n-upload-dragger>
+      </upload-file>
+      <setting-input
+        class="w-100"
+        v-model:value="config.words"
+        placeholder="水印文字"
+        size="large"
+      />
       <setting-slider
-        classname="item"
+        classname="w-100"
         v-model:value="config.size"
         label="大小"
         :min="10"
         :tooltip="false"
       />
       <setting-slider
-        classname="item"
+        classname="w-100"
         v-model:value="config.angle"
         label="角度"
         :min="0"
@@ -219,7 +224,7 @@ onMounted(() => {
         :tooltip="false"
       />
       <setting-slider
-        classname="item"
+        classname="w-100"
         v-model:value="config.rowSpace"
         label="行间距"
         :min="0"
@@ -228,7 +233,7 @@ onMounted(() => {
         :tooltip="false"
       />
       <setting-slider
-        classname="item"
+        classname="w-100"
         v-model:value="config.colSpace"
         label="列间距"
         :min="0"
@@ -236,15 +241,31 @@ onMounted(() => {
         :step="0.1"
         :tooltip="false"
       />
-      <setting-color classname="item" v-model:value="config.color" label="颜色" />
+      <setting-color classname="w-100" v-model:value="config.color" label="颜色" />
+      <n-button-group>
+        <n-button
+          type="primary"
+          v-if="imageList.list.length > 0"
+          size="medium"
+          @click="handleClearList"
+          round
+        >
+          清空图片
+        </n-button>
+        <n-button type="primary" size="medium" @click="handleResetConfig">恢复配置</n-button>
+        <n-button
+          type="primary"
+          v-if="imageList.list.length > 0"
+          size="medium"
+          @click="handleBatchDownload"
+          round
+        >
+          批量下载
+        </n-button>
+      </n-button-group>
     </div>
-    <n-button-group v-if="imageList.list.length > 0">
-      <n-button type="primary" size="medium" @click="handleClearList" round>清空图片</n-button>
-      <n-button type="primary" size="medium" @click="handleResetConfig">恢复配置</n-button>
-      <n-button type="primary" size="medium" @click="handleBatchDownload" round>批量下载</n-button>
-    </n-button-group>
 
-    <div class="d-flex flex-wrap image-list gap-4 w-100">
+    <div class="d-flex flex-wrap image-list gap-4 mh-100 overflow-auto w-50">
       <div
         v-for="(image, index) in imageList.list"
         :key="image.name"
@@ -289,13 +310,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .settings {
-  .item {
-    flex: 0 0 calc(50% - 2rem);
-    min-width: 600px;
-  }
+  flex: 1 1 33.33%;
 }
-
 .image-list {
+  flex: 2 1 66.67%;
   .image-item {
     flex: 0 0 calc(50% - 1rem);
   }

@@ -8,8 +8,8 @@ import { RouterView } from 'vue-router'
     <AppNavigator />
     <main class="flex-fill d-flex flex-column">
       <AppHeader />
-      <main class="w-100 h-100 bg-blue-lightest p-3 overflow-auto d-flex justify-content-center">
-        <div class="mw-1800px flex-fill">
+      <main class="w-100 h-100 bg-blue-lightest p-5 overflow-auto d-flex justify-content-center">
+        <div class="flex-fill">
           <RouterView />
         </div>
       </main>

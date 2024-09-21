@@ -776,8 +776,11 @@
 .w-30 {
   width: 30%;
 }
+.w-70 {
+  width: 70%;
+}
 .mw-30 {
-  min-width: 30%;
+  max-width: 30%;
 }
 
 .mw-1800px {
@@ -1057,6 +1060,9 @@
   gap: 2.5rem;
 }
 
+.gap-y-4 {
+  row-gap: 1rem;
+}
 /* font-size */
 
 .fs-0-8 {
