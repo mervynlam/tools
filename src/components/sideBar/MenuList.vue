@@ -1,6 +1,7 @@
 <script setup>
 import { pages } from '@/router/pages'
 import { useRoute, useRouter } from 'vue-router'
+import { NIcon } from 'naive-ui'
 const router = useRouter()
 const route = useRoute()
 const handleMenuClick = (path) => {
@@ -17,8 +18,22 @@ const handleMenuClick = (path) => {
         ]"
         @click="handleMenuClick(page.path)"
       >
-        {{ page.name }}
+        <n-icon class="mobile" size="26" :component="page.icon" />
+        <span class="pc">{{ page.name }}</span>
       </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@media only screen and (max-width: 600px) {
+  .pc {
+    display: none;
+  }
+}
+@media only screen and (min-width: 601px) {
+  .mobile {
+    display: none;
+  }
+}
+</style>

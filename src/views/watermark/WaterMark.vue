@@ -187,11 +187,11 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="d-flex gap-8 h-100 mw-100 justify-content-between">
+  <div class="d-flex gap-8 h-100 mw-100 justify-content-between container w-100">
     <div class="settings d-flex flex-column align-items-center gap-6">
       <upload-file @before-upload="handleBeforeUpload">
         <n-upload-dragger class="">
-          <div class="d-flex flex-column flex-center gap-3 w-400px">
+          <div class="d-flex flex-column flex-center gap-3">
             <n-icon size="38" :component="MdCloudUpload" :depth="3" />
             <span>点击或者拖动文件到该区域来上传</span>
             <span class="text-black-50 fs-0-8">只能上传jpg/png文件</span>
@@ -264,11 +264,11 @@ onMounted(() => {
       </n-button-group>
     </div>
 
-    <div class="image-list d-flex flex-wrap gap-4 mh-100 overflow-auto min-w-800px">
+    <div class="image-list d-flex flex-wrap gap-4 mh-100 overflow-auto">
       <div
         v-for="(image, index) in imageList.list"
         :key="image.name"
-        class="image-item h-300px position-relative d-flex flex-center"
+        class="image-item position-relative d-flex flex-center"
       >
         <canvas :id="idPrefix + index" class="mw-100 mh-100"></canvas>
         <div
@@ -308,18 +308,36 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.settings {
-  flex: 0 0 33.33%;
-}
-.image-list {
-  flex: 0 0 66.67%;
-  .image-item {
-    flex: 0 0 calc(50% - 1rem);
+@media only screen and (max-width: 600px) {
+  .container {
+    flex-wrap: wrap;
   }
-  .image-item:hover {
-    .shadow {
-      display: flex;
+  .settings,
+  .image-list {
+    width: calc(100vw - 40px);
+    .image-item {
+      height: 150px;
     }
+  }
+}
+@media only screen and (min-width: 601px) {
+  .settings {
+    flex: 0 0 33.33%;
+  }
+  .image-list {
+    flex: 0 0 66.67%;
+    .image-item {
+      height: 300px;
+    }
+  }
+}
+
+.image-item {
+  flex: 0 0 calc(50% - 1rem);
+}
+.image-item:hover {
+  .shadow {
+    display: flex;
   }
 }
 

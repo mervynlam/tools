@@ -302,7 +302,7 @@ const handleRemoveNote = () => {
 </script>
 
 <template>
-  <div class="d-flex h-100 gap-8 mw-100 justify-content-between">
+  <div class="d-flex h-100 gap-8 mw-100 justify-content-between container">
     <div class="settings d-flex flex-column align-items-center gap-6">
       <setting-slider
         class="w-100"
@@ -395,7 +395,7 @@ const handleRemoveNote = () => {
       />
       <upload-file @before-upload="handleBeforeUpload" :multiple="false">
         <n-upload-dragger class="">
-          <div class="d-flex justify-content-center w-400px gap-2">
+          <div class="d-flex justify-content-center gap-2">
             <span>上传小笺</span>
             <span class="text-black-50">请选择白色背景或透明背景的图片</span>
           </div>
@@ -439,17 +439,28 @@ const handleRemoveNote = () => {
         </n-button-group>
       </div>
     </div>
-    <div class="image-preview d-flex flex-column align-items-center overflow-auto min-w-800px">
+    <div class="image-preview d-flex flex-column align-items-center overflow-auto">
       <canvas :id="noteCanvasId" class="mh-400px mw-400px d-none"></canvas>
       <canvas :id="canvasId" class="mh-125 mw-100"></canvas>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-.settings {
-  flex: 0 0 33.33%;
+@media only screen and (max-width: 600px) {
+  .container {
+    flex-wrap: wrap;
+  }
+  .settings,
+  .image-preview {
+    width: calc(100vw - 40px);
+  }
 }
-.image-preview {
-  flex: 0 0 66.67%;
+@media only screen and (min-width: 601px) {
+  .settings {
+    flex: 0 0 33.33%;
+  }
+  .image-preview {
+    flex: 0 0 66.67%;
+  }
 }
 </style>
