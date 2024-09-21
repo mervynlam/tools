@@ -1,35 +1,14 @@
-# tools_re
+# Tools
 
-This template should help get you started developing with Vue 3 in Vite.
+自用小工具，目前已有功能：
 
-## Recommended IDE Setup
+- 图片加水印：批量给图片加水印，没有任何网络请求，保护证件隐私安全。
+  - 自定义水印的颜色、大小、间距、文字
+- 绘制练字格：绘制各式各样的练字格，让练字变得趣味横生。
+  - 自定义边距、格子大小、标题、格子类型、纸张大小、颜色
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+未来可能会增加的新功能
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- 图片拼接
+- 练字格：
+  - 增加背景
