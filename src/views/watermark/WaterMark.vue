@@ -1,11 +1,11 @@
 <script setup>
 import { nextTick, onMounted, reactive, watch } from 'vue'
-import { NInput, NIcon, NImage, NButton, NButtonGroup } from 'naive-ui'
+import { NInput, NIcon, NImage, NButton, NButtonGroup, NUploadDragger } from 'naive-ui'
 import SettingInput from '@/components/settingItems/SettingInput.vue'
 import SettingSlider from '@/components/settingItems/SettingSlider.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
-import UploadFile from './UploadFile.vue'
-import { MdSearch, MdDownload, IosClose } from '@vicons/ionicons4'
+import UploadFile from '@/components/UploadFile.vue'
+import { MdSearch, MdDownload, IosClose, MdCloudUpload } from '@vicons/ionicons4'
 import { drawImg, getCanvasDataUrl, getFontContext } from '@/utils/canvas'
 import moment from 'moment'
 import { downloadImage } from '@/utils/download'
@@ -189,11 +189,18 @@ onMounted(() => {
 </script>
 <template>
   <div class="d-flex flex-column gap-8 align-items-center">
-    <upload-file
-      @before-upload="handleBeforeUpload"
-      :size-limit="sizeLimit"
-      :amount-limit="amountLimit"
-    />
+    <upload-file @before-upload="handleBeforeUpload">
+      <n-upload-dragger class="">
+        <div class="d-flex flex-column flex-center gap-3 w-500px">
+          <n-icon size="38" :component="MdCloudUpload" :depth="3" />
+          <span>点击或者拖动文件到该区域来上传</span>
+          <span class="text-black-50 fs-0-8">只能上传jpg/png文件</span>
+          <span class="text-black-50 fs-0-8">
+            文件不超过{{ sizeLimit }}M，且不超过{{ amountLimit }}张
+          </span>
+        </div>
+      </n-upload-dragger>
+    </upload-file>
     <setting-input class="w-100" v-model:value="config.words" placeholder="水印文字" size="large" />
     <div class="d-flex gap-8 flex-wrap justify-content-center settings">
       <setting-slider
