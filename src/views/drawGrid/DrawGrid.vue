@@ -4,16 +4,28 @@ import SettingSlider from '@/components/settingItems/SettingSlider.vue'
 import SettingInput from '@/components/settingItems/SettingInput.vue'
 import SettingColor from '@/components/settingItems/SettingColor.vue'
 import SettingRadio from '@/components/settingItems/SettingRadio.vue'
-import { NSwitch, NButton } from 'naive-ui'
+import UploadFile from '@/components/UploadFile.vue'
+import { NSwitch, NButton, NUploadDragger } from 'naive-ui'
 import { NInputNumber } from 'naive-ui'
 import { styleArr, paperArr, customPaper } from './constants'
-import { cm2px, setConfig } from '@/utils/utils'
-import { drawLine, drawRect, drawText, getCanvasDataUrl } from '@/utils/canvas'
+import { cm2px, rgbStr2Rgba, setConfig } from '@/utils/utils'
+import {
+  drawImg,
+  drawImgInside,
+  drawLine,
+  drawRect,
+  drawText,
+  getCanvasDataUrl,
+  replaceColor
+} from '@/utils/canvas'
 import { debounce } from 'lodash'
 import { downloadPDF } from '@/utils/download'
+import { useGlobalStore } from '@/store'
+
+const store = useGlobalStore()
 
 const canvasId = 'grid_canvas'
-const tempCanvasId = 'grid_canvas_temp'
+const noteCanvasId = 'grid_canvas_note'
 const storeKey = 'grid_config'
 
 const config = reactive({
@@ -31,6 +43,13 @@ const config = reactive({
   transpose: false
 })
 
+const note = reactive({
+  file: null,
+  size: 1,
+  x: 0,
+  y: 0.5
+})
+
 onMounted(() => {
   const configStr = localStorage.getItem(storeKey)
   const storeConfig = JSON.parse(configStr)
@@ -38,7 +57,7 @@ onMounted(() => {
   draw()
 })
 
-watch(config, (newValue) => {
+watch([config, note], (newValue) => {
   nextTick(() => {
     draw()
   })
@@ -63,7 +82,7 @@ const saveStore = debounce((config) => {
 }, 300)
 
 const draw = () => {
-  const canvas = getCanvas()
+  const canvas = getCanvas(canvasId)
   //clear
   const ctx = canvas.getContext('2d')
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -175,12 +194,10 @@ const draw = () => {
   }
   drawGridMethod.drawpBorder()
   drawGridMethod.drawTitle()
+  if (note.file) {
+    drawNote(widthPx, heightPx)
+  }
 
-  // drawGridMethod.drawHorizontal()
-  // drawGridMethod.drawVertical()
-  // drawGridMethod.drawDottedHorizontal()
-  // drawGridMethod.drawDottedVertical()
-  // drawGridMethod.drawDiagonal()
   switch (config.style) {
     case 'mi':
       drawGridMethod.drawHorizontal()
@@ -222,13 +239,6 @@ const draw = () => {
   }
 }
 
-const handleDownloadPdf = () => {
-  const realWidth = config.transpose ? config.height : config.width
-  const realHeight = config.transpose ? config.width : config.height
-  const url = getCanvasDataUrl(getCanvas())
-  const fileName = getFileName(realWidth, realHeight)
-  downloadPDF(realWidth, realHeight, url, fileName)
-}
 const getFileName = (realWidth, realHeight) => {
   const fileName = []
   if (config.title) {
@@ -246,8 +256,45 @@ const getFileName = (realWidth, realHeight) => {
   return fileName.join('_')
 }
 
-const getCanvas = () => {
-  return document.getElementById(canvasId)
+const getCanvas = (id) => {
+  return document.getElementById(id)
+}
+
+const drawNote = (widthPx, heightPx) => {
+  const noteCanvas = getCanvas(noteCanvasId)
+  const canvas = getCanvas(canvasId)
+  replaceColor(noteCanvas, rgbStr2Rgba(config.color))
+  drawImgInside(canvas, noteCanvas, note.size, widthPx * note.x, heightPx * note.y)
+}
+
+const handleDownloadPdf = () => {
+  const realWidth = config.transpose ? config.height : config.width
+  const realHeight = config.transpose ? config.width : config.height
+  const url = getCanvasDataUrl(getCanvas(canvasId))
+  const fileName = getFileName(realWidth, realHeight)
+  downloadPDF(realWidth, realHeight, url, fileName)
+}
+
+const handleBeforeUpload = ({ file: fileArg }) => {
+  const { file } = fileArg
+  const { size } = file
+
+  if (size > 1024 * 1024) {
+    store.open_error_message(`${file.name} 超过 1M，添加失败。`)
+    return false
+  }
+  note.file = file
+  const fileReader = new FileReader()
+  fileReader.onload = (e) => {
+    const img = new Image()
+    img.src = e.target.result
+    img.onload = () => {
+      const canvas = getCanvas(noteCanvasId)
+      drawImg(canvas, img)
+      draw()
+    }
+  }
+  fileReader.readAsDataURL(file)
 }
 </script>
 
@@ -283,7 +330,7 @@ const getCanvas = () => {
         label="标题位置"
         :min="0"
         :max="1"
-        :step="0.1"
+        :step="0.05"
         :tooltip="false"
       />
       <setting-slider
@@ -296,7 +343,6 @@ const getCanvas = () => {
         :tooltip="false"
       />
       <setting-radio class="w-100" label="样式" v-model:value="config.style" :options="styleArr" />
-      <setting-color class="w-100" v-model:value="config.color" label="颜色" />
       <setting-radio
         class="w-100"
         label="纸张大小"
@@ -335,6 +381,7 @@ const getCanvas = () => {
           </div>
         </div>
       </setting-radio>
+      <setting-color class="w-100" v-model:value="config.color" label="颜色" />
       <setting-slider
         class="w-100"
         label="过渡"
@@ -343,13 +390,49 @@ const getCanvas = () => {
         :max="1"
         :step="0.05"
       />
+      <upload-file @before-upload="handleBeforeUpload" :multiple="false">
+        <n-upload-dragger class="">
+          <div class="d-flex flex-column w-100px">
+            <span>上传小笺</span>
+          </div>
+        </n-upload-dragger>
+      </upload-file>
+      <div v-if="note.file" class="d-flex flex-column align-items-center gap-6 w-100">
+        <setting-slider
+          class="w-100"
+          label="小笺大小"
+          v-model:value="note.size"
+          :min="0"
+          :max="1"
+          :step="0.005"
+          :tooltip="false"
+        />
+        <setting-slider
+          class="w-100"
+          label="小笺横坐标"
+          v-model:value="note.x"
+          :min="0"
+          :max="1"
+          :step="0.005"
+          :tooltip="false"
+        />
+        <setting-slider
+          class="w-100"
+          label="小笺纵坐标"
+          v-model:value="note.y"
+          :min="0"
+          :max="1"
+          :step="0.005"
+          :tooltip="false"
+        />
+      </div>
       <div>
         <n-button type="primary" size="medium" @click="handleDownloadPdf" round>下载PDF</n-button>
       </div>
     </div>
     <div class="image-preview d-flex flex-column align-items-center overflow-auto">
+      <canvas :id="noteCanvasId" class="mh-400px mw-400px d-none"></canvas>
       <canvas :id="canvasId" class="mh-125 mw-100"></canvas>
-      <canvas :id="tempCanvasId" class="mh-400px mw-400px d-none"></canvas>
     </div>
   </div>
 </template>

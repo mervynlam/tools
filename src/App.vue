@@ -10,7 +10,9 @@ import { NConfigProvider } from 'naive-ui'
 const themeOverrides = {
   common: {
     primaryColor: '#42B1C7FF',
-    primaryColorHover: '#60C1D5FF'
+    primaryColorHover: '#60C1D5FF',
+    primaryColorPressed: '#2992A7FF',
+    primaryColorSuppl: '#60C1D5FF'
   }
 }
 </script>

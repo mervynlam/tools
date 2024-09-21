@@ -2,6 +2,7 @@
 import { NUpload } from 'naive-ui'
 
 const emit = defineEmits(['before-upload'])
+const { multiple = true } = defineProps(['multiple'])
 
 const handleBeforeUpload = (file) => {
   emit('before-upload', file)
@@ -12,7 +13,7 @@ const handleBeforeUpload = (file) => {
   <div class="">
     <n-upload
       action=""
-      multiple
+      :multiple="multiple"
       directory-dnd
       :file-list="fileList"
       @before-upload="handleBeforeUpload"

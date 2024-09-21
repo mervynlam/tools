@@ -53,7 +53,6 @@ watch(config, (newValue) => {
 
 const draw = () => {
   drawThumbnail()
-  drawMark()
 }
 
 const drawThumbnail = () => {

@@ -9,3 +9,14 @@ export const setConfig = (storeConfig, targetConfig) => {
     targetConfig[key] = storeConfig[key]
   }
 }
+
+export const rgbStr2Rgba = (rgbStr) => {
+  const [r, g, b, a] = rgbStr.slice(rgbStr.indexOf('(') + 1, rgbStr.lastIndexOf(')')).split(',')
+
+  return {
+    r: parseInt(r),
+    g: parseInt(g),
+    b: parseInt(b),
+    a: parseInt(a)
+  }
+}

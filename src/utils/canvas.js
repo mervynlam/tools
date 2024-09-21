@@ -1,9 +1,11 @@
-export const drawImg = (canvas, image) => {
-  canvas.width = image.width
-  canvas.height = image.height
+export const drawImg = (canvas, image, scale = 1) => {
+  const realWidth = image.width * scale
+  const realHeight = image.height * scale
+  canvas.width = realWidth
+  canvas.height = realHeight
   const ctx = canvas.getContext('2d')
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.drawImage(image, 0, 0)
+  ctx.clearRect(0, 0, realWidth, realHeight)
+  ctx.drawImage(image, 0, 0, realWidth, realHeight)
 }
 
 export const getFontContext = (canvas, options) => {
@@ -50,4 +52,33 @@ export const drawText = (canvas, text, size, color, x, y) => {
   fontCtx.textAlign = 'center'
   fontCtx.textBaseline = 'middle'
   fontCtx.fillText(text, x, y)
+}
+
+export const replaceColor = (canvas, color) => {
+  const ctx = canvas.getContext('2d')
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  const data = imageData.data
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i] // Red
+    const g = data[i + 1] // Green
+    const b = data[i + 2] // Blue
+    const a = data[i + 3] // Alpha
+
+    if (r > 240 && g > 240 && b > 240 && a > 0) {
+      // 将白色替换为透明
+      data[i + 3] = 0
+    } else if (a !== 0) {
+      // 非透明部分替换颜色
+      data[i] = color.r // Red
+      data[i + 1] = color.g // Green
+      data[i + 2] = color.b // Blue
+    }
+  }
+  ctx.putImageData(imageData, 0, 0)
+}
+
+export const drawImgInside = (canvas, image, scale = 1, x, y) => {
+  const ctx = canvas.getContext('2d')
+  ctx.drawImage(image, x, y, image.width * scale, image.height * scale)
 }
