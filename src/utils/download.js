@@ -24,3 +24,24 @@ export const downloadPDF = (width, height, url, fileName) => {
   doc.addImage(url, 'PNG', 0, 0, width, height)
   doc.save(`${fileName}.pdf`)
 }
+
+export const download = (data, filename, type) => {
+  const file = new Blob([data], { type: type })
+  if (window.navigator.msSaveOrOpenBlob)
+    // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename)
+  else {
+    // Others
+    const linkarea = document.getElementById('downloadLinks')
+    const a = document.createElement('a'),
+      url = URL.createObjectURL(file)
+    a.href = url
+    a.download = filename
+    linkarea.appendChild(a)
+    a.click()
+    setTimeout(function () {
+      linkarea.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    }, 0)
+  }
+}

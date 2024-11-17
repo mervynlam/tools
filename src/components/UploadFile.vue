@@ -2,7 +2,7 @@
 import { NUpload } from 'naive-ui'
 
 const emit = defineEmits(['before-upload'])
-const { multiple = true } = defineProps(['multiple'])
+const { multiple = true, accept = 'image/png, image/jpeg' } = defineProps(['multiple', 'accept'])
 
 const handleBeforeUpload = (file) => {
   emit('before-upload', file)
@@ -18,7 +18,7 @@ const handleBeforeUpload = (file) => {
       :file-list="fileList"
       @before-upload="handleBeforeUpload"
       :show-file-list="false"
-      accept="image/png, image/jpeg"
+      :accept="accept"
     >
       <slot></slot>
     </n-upload>

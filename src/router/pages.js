@@ -2,7 +2,8 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import WaterMark from '../views/watermark/WaterMark.vue'
 import DrawGrid from '../views/drawGrid/DrawGrid.vue'
-import { MdHome, MdImages, MdGrid, IosChatbubbles } from '@vicons/ionicons4'
+import { MdHome, MdImages, MdGrid, IosChatbubbles, MdBookmarks } from '@vicons/ionicons4'
+import KindleNote from '@/views/kindleNote/KindleNote.vue'
 export const pages = [
   {
     icon: MdHome,
@@ -25,6 +26,14 @@ export const pages = [
     isTool: true,
     component: DrawGrid,
     description: '绘制各式各样的练字格，让练字变得趣味横生。'
+  },
+  {
+    icon: MdBookmarks,
+    path: '/kindleNote',
+    name: 'Kindle笔记',
+    isTool: true,
+    component: KindleNote,
+    description: '将 HTML 格式的 Kindle 的笔记文件转成纯文本。'
   },
   {
     icon: IosChatbubbles,

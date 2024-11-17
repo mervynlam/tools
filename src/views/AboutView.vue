@@ -1,6 +1,9 @@
 <template>
-  <div class="">
-    <h1>This is an about page</h1>
+  <div class="h3">
+    <span className="fw-bold">Github:</span>
+    <a href="https://github.com/mervynlam/tools" target="_blank">
+      https://github.com/mervynlam/tools
+    </a>
   </div>
 </template>
 
